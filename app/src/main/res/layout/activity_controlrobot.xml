@@ -7,12 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.rick">
+    tools:context="com.example.rick.testbuttons.ControlRobotActivity">
 
     <Button
         android:layout_width="@dimen/button_standard_width"
         android:layout_height="@dimen/button_standard_height"
-        android:text="@string/up"
+        android:text="@string/forward"
         android:id="@+id/btnUp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
