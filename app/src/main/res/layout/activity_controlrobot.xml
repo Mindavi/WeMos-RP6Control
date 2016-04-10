@@ -10,46 +10,39 @@
     tools:context="com.example.rick.testbuttons.ControlRobotActivity">
 
     <Button
-        android:layout_width="@dimen/button_standard_width"
-        android:layout_height="@dimen/button_standard_height"
+        style="@style/Button"
         android:text="@string/forward"
         android:id="@+id/btnUp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:clickable="true"
         android:onClick="up_click"
-        android:backgroundTint="@color/colorButtonGreen"/>
+        android:backgroundTint="@color/colorButtonGreen"
+        android:textColor="@color/colorBlack"/>
 
     <Button
-        android:layout_width="@dimen/button_standard_width"
-        android:layout_height="@dimen/button_standard_height"
+        style="@style/Button"
         android:text="@string/left"
         android:id="@+id/btnLeft"
-        android:layout_above="@+id/btnDown"
-        android:layout_toStartOf="@+id/btnDown"
-        android:clickable="true"
         android:onClick="left_click"
-        android:backgroundTint="@color/colorButtonGreen"/>
+        android:backgroundTint="@color/colorButtonGreen"
+        android:layout_below="@+id/btnUp"
+        android:layout_toStartOf="@+id/btnUp" />
 
     <Button
-        android:layout_width="@dimen/button_standard_width"
-        android:layout_height="@dimen/button_standard_height"
+        style="@style/Button"
         android:text="@string/right"
         android:id="@+id/btnRight"
         android:layout_below="@+id/btnUp"
         android:layout_toEndOf="@+id/btnUp"
-        android:clickable="true"
         android:onClick="right_click"
         android:backgroundTint="@color/colorButtonGreen"/>
 
     <Button
-        android:layout_width="@dimen/button_standard_width"
-        android:layout_height="@dimen/button_standard_height"
+        style="@style/Button"
         android:text="@string/backward"
         android:id="@+id/btnDown"
         android:layout_below="@+id/btnRight"
         android:layout_toStartOf="@+id/btnRight"
-        android:clickable="true"
         android:onClick="down_click"
         android:backgroundTint="@color/colorButtonGreen"/>
 
@@ -59,9 +52,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/no_button_pressed"
         android:id="@+id/tvDirectionPressed"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginTop="76dp"
+        android:layout_below="@+id/tvConnectionStatus"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="150dp"
@@ -73,26 +67,15 @@
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/ip_address"
-        android:id="@+id/textIpAddress"
-        android:labelFor="@+id/editText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        android:gravity="center"/>
-
     <EditText
         android:hint="@string/ip_address"
         android:inputType="textUri"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/textIpAddress"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center"/>
+        android:layout_marginBottom="76dp" />
 
 </RelativeLayout>
