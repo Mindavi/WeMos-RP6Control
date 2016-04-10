@@ -41,7 +41,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     public void up_click(View view) {
-        UpdateTextViewAndSendMessage("UP");
+        UpdateTextViewAndSendMessage("FORWARD");
     }
 
     private void UpdateTextViewAndSendMessage(String message) {
