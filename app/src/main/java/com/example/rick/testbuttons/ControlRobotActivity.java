@@ -1,7 +1,6 @@
 package com.example.rick.testbuttons;
 
 import android.os.AsyncTask;
-import android.os.NetworkOnMainThreadException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +16,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class ControlRobotActivity extends AppCompatActivity {
-    protected TextView tvDirection = null;
-    protected TextView tvStatus = null;
+    private TextView tvDirection = null;
+    private TextView tvStatus = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,6 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     private class SendMessageOverNetwork extends AsyncTask<String, String, Boolean> {
-        //final private byte[] IPADDRESS = {10, 0, 2, 2};
         private InetAddress ipAddress = null;
         private String input = null;
 

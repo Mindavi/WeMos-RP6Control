@@ -85,6 +85,8 @@
         android:gravity="center"/>
 
     <EditText
+        android:hint="@string/ip_address"
+        android:inputType="textUri"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
