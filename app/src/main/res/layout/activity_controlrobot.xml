@@ -45,7 +45,7 @@
     <Button
         android:layout_width="@dimen/button_standard_width"
         android:layout_height="@dimen/button_standard_height"
-        android:text="@string/down"
+        android:text="@string/backward"
         android:id="@+id/btnDown"
         android:layout_below="@+id/btnRight"
         android:layout_toStartOf="@+id/btnRight"
