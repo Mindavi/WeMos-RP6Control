@@ -29,7 +29,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     public void down_click(View view) {
-        UpdateTextViewAndSendMessage("DOWN");
+        UpdateTextViewAndSendMessage("BACKWARD");
     }
 
     public void right_click(View view) {
