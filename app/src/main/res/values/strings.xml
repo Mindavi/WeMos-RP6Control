@@ -7,7 +7,7 @@
     <string name="message_sent">Message sent.</string>
     <string name="ip_address">IP address</string>
     <string name="forward">Forward</string>
-    <string name="down">Down</string>
+    <string name="backward">Backward</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="no_button_pressed">No button pressed.</string>

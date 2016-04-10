@@ -4,7 +4,7 @@
     <string name="connection">Verbinding gemaakt.</string>
     <string name="connection_ended">Verbinding gesloten</string>
     <string name="connection_failed">Er kon geen verbinding worden gemaakt.</string>
-    <string name="down">Omlaag</string>
+    <string name="backward">Omlaag</string>
     <string name="invalid_input">Invalide invoer</string>
     <string name="ip_address">IP adres</string>
     <string name="left">Links</string>
