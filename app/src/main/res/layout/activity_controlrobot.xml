@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.rick">
+
+    <Button
+        android:layout_width="@dimen/button_standard_width"
+        android:layout_height="@dimen/button_standard_height"
+        android:text="@string/up"
+        android:id="@+id/btnUp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:onClick="up_click"
+        android:backgroundTint="@color/colorButtonGreen"/>
+
+    <Button
+        android:layout_width="@dimen/button_standard_width"
+        android:layout_height="@dimen/button_standard_height"
+        android:text="@string/left"
+        android:id="@+id/btnLeft"
+        android:layout_above="@+id/btnDown"
+        android:layout_toStartOf="@+id/btnDown"
+        android:clickable="true"
+        android:onClick="left_click"
+        android:backgroundTint="@color/colorButtonGreen"/>
+
+    <Button
+        android:layout_width="@dimen/button_standard_width"
+        android:layout_height="@dimen/button_standard_height"
+        android:text="@string/right"
+        android:id="@+id/btnRight"
+        android:layout_below="@+id/btnUp"
+        android:layout_toEndOf="@+id/btnUp"
+        android:clickable="true"
+        android:onClick="right_click"
+        android:backgroundTint="@color/colorButtonGreen"/>
+
+    <Button
+        android:layout_width="@dimen/button_standard_width"
+        android:layout_height="@dimen/button_standard_height"
+        android:text="@string/down"
+        android:id="@+id/btnDown"
+        android:layout_below="@+id/btnRight"
+        android:layout_toStartOf="@+id/btnRight"
+        android:clickable="true"
+        android:onClick="down_click"
+        android:backgroundTint="@color/colorButtonGreen"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/no_button_pressed"
+        android:id="@+id/tvDirectionPressed"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/no_connection"
+        android:id="@+id/tvConnectionStatus"
+        android:layout_marginTop="200dp"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ip_address"
+        android:id="@+id/textIpAddress"
+        android:labelFor="@+id/editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:gravity="center"/>
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/textIpAddress"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+
+</RelativeLayout>

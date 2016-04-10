@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RP6 Control</string>
+    <string name="connection_failed">No connection could be made.</string>
+    <string name="connection">Connection made.</string>
+    <string name="no_connection">No connection.</string>
+    <string name="connection_ended">Connection closed.</string>
+    <string name="message_sent">Message sent.</string>
+    <string name="ip_address">IP address</string>
+    <string name="forward">Forward</string>
+    <string name="down">Down</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="no_button_pressed">No button pressed.</string>
+
+    <string name="invalid_input">Invalid input.</string>
+</resources>
