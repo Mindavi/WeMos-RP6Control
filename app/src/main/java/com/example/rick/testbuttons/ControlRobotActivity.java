@@ -50,19 +50,26 @@ public class ControlRobotActivity extends AppCompatActivity {
 
     private class SendMessageOverNetwork extends AsyncTask<String, String, Boolean> {
         private InetAddress ipAddress = null;
-        private String input = null;
+        private String ipInput = null;
+        private int portInput = 0;
 
         @Override
         protected void onPreExecute() {
-            EditText editText = (EditText) findViewById(R.id.editText);
-            if (editText != null) {
-                input = editText.getText().toString();
+            EditText tbIpAddress = (EditText) findViewById(R.id.tbIpAddress);
+            EditText tbPortNumber = (EditText) findViewById(R.id.tbPortNumber);
+            String portString = null;
+            if (tbIpAddress != null) {
+                ipInput = tbIpAddress.getText().toString();
             }
+            if (tbPortNumber != null) {
+                portString = tbPortNumber.getText().toString();
+            }
+            portInput = Integer.parseInt(portString);
         }
 
         protected Boolean doInBackground(String... params) {
             try {
-                ipAddress = InetAddress.getByName(input);
+                ipAddress = InetAddress.getByName(ipInput);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
                 return false;
@@ -73,8 +80,8 @@ public class ControlRobotActivity extends AppCompatActivity {
             final String message = params[0];
             final Socket s = new Socket();
             try {
-                InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, 80);
-                publishProgress("Making socket...");
+                InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, portInput);
+                publishProgress(getString(R.string.making_socket));
                 s.connect(socketAddress, 100);
                 {
                     publishProgress(getString(R.string.connection));

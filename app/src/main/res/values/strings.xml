@@ -10,4 +10,6 @@
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="no_button_pressed">No button pressed.</string>
+    <string name="making_socket">Making socket&#8230;</string>
+    <string name="port_number">Port number</string>
 </resources>

@@ -3,7 +3,7 @@
     <string name="app_name">RP6 Besturing</string>
     <string name="connection">Verbinding gemaakt.</string>
     <string name="connection_failed">Er kon geen verbinding worden gemaakt.</string>
-    <string name="backward">Omlaag</string>
+    <string name="backward">Achteruit</string>
     <string name="ip_address">IP adres</string>
     <string name="left">Links</string>
     <string name="message_sent">Bericht verzonden.</string>
@@ -11,4 +11,6 @@
     <string name="no_connection">Geen verbinding.</string>
     <string name="right">Rechts</string>
     <string name="forward">Vooruit</string>
+    <string name="making_socket">Socket maken&#8230;</string>
+    <string name="port_number">Poortnummer</string>
 </resources>

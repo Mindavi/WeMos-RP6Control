@@ -72,10 +72,24 @@
         android:inputType="textUri"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/tbIpAddress"
         android:gravity="center"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/tvDirectionPressed"
+        android:layout_alignStart="@+id/tvConnectionStatus"
+        android:layout_marginTop="83dp" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/tbPortNumber"
+        android:clickable="false"
+        android:hint="@string/port_number"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:layout_alignTop="@+id/tbIpAddress"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="76dp" />
+        android:layout_marginTop="46dp" />
 
 </RelativeLayout>
