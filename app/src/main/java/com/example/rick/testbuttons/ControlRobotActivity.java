@@ -64,7 +64,17 @@ public class ControlRobotActivity extends AppCompatActivity {
             if (tbPortNumber != null) {
                 portString = tbPortNumber.getText().toString();
             }
-            portInput = Integer.parseInt(portString);
+            try {
+                portInput = Integer.parseInt(portString);
+            }
+            catch (NumberFormatException e) {
+                e.printStackTrace();
+                TextView connStatus = (TextView) findViewById(R.id.tvConnectionStatus);
+                if (connStatus != null) {
+                    connStatus.setText(R.string.invalid_port_number);
+                }
+                cancel(true);
+            }
         }
 
         protected Boolean doInBackground(String... params) {
@@ -82,7 +92,7 @@ public class ControlRobotActivity extends AppCompatActivity {
             try {
                 InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, portInput);
                 publishProgress(getString(R.string.making_socket));
-                s.connect(socketAddress, 100);
+                s.connect(socketAddress, 300);
                 {
                     publishProgress(getString(R.string.connection));
                 }

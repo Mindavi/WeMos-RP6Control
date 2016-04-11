@@ -53,18 +53,19 @@
         android:text="@string/no_button_pressed"
         android:id="@+id/tvDirectionPressed"
         android:gravity="center"
-        android:layout_marginTop="76dp"
-        android:layout_below="@+id/tvConnectionStatus"
+        android:layout_marginTop="42dp"
+        android:layout_below="@+id/btnDown"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/no_connection"
         android:id="@+id/tvConnectionStatus"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:gravity="center_horizontal"
+        android:layout_below="@+id/btnDown"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -74,8 +75,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tbIpAddress"
         android:gravity="center"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/tvDirectionPressed"
+        android:layout_below="@+id/tvConnectionStatus"
         android:layout_alignStart="@+id/tvConnectionStatus" />
 
     <EditText

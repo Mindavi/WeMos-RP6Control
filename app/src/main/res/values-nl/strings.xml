@@ -13,4 +13,5 @@
     <string name="forward">Vooruit</string>
     <string name="making_socket">Socket maken&#8230;</string>
     <string name="port_number">Poortnummer</string>
+    <string name="invalid_port_number">Ongeldig poortnummer ingevoerd.</string>
 </resources>
