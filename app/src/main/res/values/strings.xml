@@ -3,7 +3,6 @@
     <string name="connection_failed">No connection could be made.</string>
     <string name="connection">Connection made.</string>
     <string name="no_connection">No connection.</string>
-    <string name="message_sent">Message sent.</string>
     <string name="ip_address">IP address</string>
     <string name="forward">Forward</string>
     <string name="backward">Backward</string>
@@ -13,4 +12,10 @@
     <string name="making_socket">Making socket&#8230;</string>
     <string name="port_number">Port number</string>
     <string name="invalid_port_number">An invalid port number was entered.</string>
+    <string name="message_not_sent">Message was not sent.</string>
+    <string name="connect">Connect</string>
+    <plurals name="number_messages_sent">
+        <item quantity="one">%d message sent.</item>
+        <item quantity="other">%d messages sent.</item>
+    </plurals>
 </resources>

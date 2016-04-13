@@ -47,17 +47,6 @@
         android:backgroundTint="@color/colorButtonGreen"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/no_button_pressed"
-        android:id="@+id/tvDirectionPressed"
-        android:gravity="center"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/btnDown"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -91,5 +80,15 @@
         android:layout_alignTop="@+id/tbIpAddress"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="46dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connect"
+        android:id="@+id/btnConnect"
+        android:layout_below="@+id/tbPortNumber"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:onClick="connect_click"/>
 
 </RelativeLayout>
