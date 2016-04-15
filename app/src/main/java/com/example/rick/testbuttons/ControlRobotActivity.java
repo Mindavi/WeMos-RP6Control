@@ -2,6 +2,7 @@ package com.example.rick.testbuttons;
 
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,28 @@ public class ControlRobotActivity extends AppCompatActivity {
         messageCounter = 0;
     }
 
+    private final static int INTERVAL = 1000 * 3; //15 seconds
+    Handler keepAliveHandler = new Handler();
+    Runnable keepAliveHandlerTask = new Runnable()
+    {
+        @Override
+        public void run() {
+            new SendMessageOverNetwork().execute("!");
+            keepAliveHandler.postDelayed(keepAliveHandlerTask, INTERVAL);
+        }
+    };
+
+    void startKeepAlive()
+    {
+        keepAliveHandlerTask.run();
+    }
+
+    void stopKeepAlive()
+    {
+        keepAliveHandler.removeCallbacks(keepAliveHandlerTask);
+    }
+
+
     public void down_click(View view) {
         SendMessage("BACKWARD");
     }
@@ -47,8 +70,10 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     public void connect_click(View view) {
-        if (socket == null || !socket.isConnected()) {
+        //http://stackoverflow.com/a/33699563
+        if (socket == null || socket.isClosed()) {
             new MakeSocketConnection().execute();
+            startKeepAlive();
         }
     }
 
