@@ -71,10 +71,8 @@ public class ControlRobotActivity extends AppCompatActivity {
 
     public void connect_click(View view) {
         //http://stackoverflow.com/a/33699563
-        if (socket == null || socket.isClosed()) {
-            new MakeSocketConnection().execute();
-            startKeepAlive();
-        }
+        new MakeSocketConnection().execute();
+        startKeepAlive();
     }
 
     private void SendMessage(String message) {
@@ -180,6 +178,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                 return false;
             }
             sOutput.println(message);
+            sOutput.flush();
             return true;
         }
 
