@@ -54,7 +54,8 @@ public class ControlRobotActivity extends AppCompatActivity {
 
     private void SendMessage(String message) {
         if (socket != null && socket.isConnected()) {
-            new SendMessageOverNetwork().execute(message);
+            String finalMessage = "#" + message + "%";
+            new SendMessageOverNetwork().execute(finalMessage);
         } else {
             tvStatus.setText(R.string.message_not_sent);
         }
