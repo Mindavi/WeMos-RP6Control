@@ -56,7 +56,6 @@ public class ControlRobotActivity extends AppCompatActivity {
             btnBind.setText(R.string.bind);
             messageCounter = 0;
         } else {
-            //http://stackoverflow.com/a/33699563
             new MakeSocketAddress().execute();
         }
     }
