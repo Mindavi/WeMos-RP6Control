@@ -2,10 +2,10 @@ package com.example.rick.testbuttons;
 
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,12 +14,13 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 public class ControlRobotActivity extends AppCompatActivity {
     private TextView tvStatus;
-    private Socket socket;
+    private Button btnBind;
+    private SocketAddress socketAddress;
     private int messageCounter;
 
     @Override
@@ -27,31 +28,10 @@ public class ControlRobotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlrobot);
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
-        socket = null;
+        btnBind = (Button) findViewById(R.id.btnBind);
+        socketAddress = null;
         messageCounter = 0;
     }
-
-    private final static int INTERVAL = 1000 * 3; //15 seconds
-    Handler keepAliveHandler = new Handler();
-    Runnable keepAliveHandlerTask = new Runnable()
-    {
-        @Override
-        public void run() {
-            new SendMessageOverNetwork().execute("!");
-            keepAliveHandler.postDelayed(keepAliveHandlerTask, INTERVAL);
-        }
-    };
-
-    void startKeepAlive()
-    {
-        keepAliveHandlerTask.run();
-    }
-
-    void stopKeepAlive()
-    {
-        keepAliveHandler.removeCallbacks(keepAliveHandlerTask);
-    }
-
 
     public void down_click(View view) {
         SendMessage("BACKWARD");
@@ -69,31 +49,38 @@ public class ControlRobotActivity extends AppCompatActivity {
         SendMessage("FORWARD");
     }
 
-    public void connect_click(View view) {
-        //http://stackoverflow.com/a/33699563
-        new MakeSocketConnection().execute();
-        startKeepAlive();
-    }
-
-    private void SendMessage(String message) {
-        if (socket != null && socket.isConnected()) {
-            String finalMessage = "#" + message + "%";
-            new SendMessageOverNetwork().execute(finalMessage);
+    public void bind_click(View view) {
+        if (socketAddress != null) {
+            socketAddress = null;
+            tvStatus.setText(R.string.unbind_done);
+            btnBind.setText(R.string.bind);
+            messageCounter = 0;
         } else {
-            tvStatus.setText(R.string.message_not_sent);
+            //http://stackoverflow.com/a/33699563
+            new MakeSocketAddress().execute();
         }
     }
 
-    private class MakeSocketConnection extends AsyncTask<Void, String, Socket> {
-        private InetAddress ipAddress = null;
-        private String ipInput = null;
-        private int portInput = 0;
+    private void SendMessage(String message) {
+        String finalMessage = "#" + message + "%";
+        new SendMessageOverNetwork().execute(finalMessage);
+    }
+
+    private class MakeSocketAddress extends AsyncTask<Void, String, InetSocketAddress> {
+        private String ipInput;
+        private int portInput;
+
+        private MakeSocketAddress() {
+            ipInput = null;
+            portInput = 0;
+        }
 
         @Override
         protected void onPreExecute() {
             EditText tbIpAddress = (EditText) findViewById(R.id.tbIpAddress);
             EditText tbPortNumber = (EditText) findViewById(R.id.tbPortNumber);
             String portString = null;
+
             if (tbIpAddress != null) {
                 ipInput = tbIpAddress.getText().toString();
             }
@@ -109,87 +96,73 @@ public class ControlRobotActivity extends AppCompatActivity {
                 if (connStatus != null) {
                     connStatus.setText(R.string.invalid_port_number);
                 }
+                cancel(true);
             }
         }
 
-        protected Socket doInBackground(Void... voids) {
+        protected InetSocketAddress doInBackground(Void... voids) {
+            InetAddress inetAddress;
             try {
-                ipAddress = InetAddress.getByName(ipInput);
+                inetAddress = InetAddress.getByName(ipInput);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
                 return null;
             }
-            if (ipAddress == null) {
-                return null;
-            }
-            Socket s = new Socket();
-            try {
-                InetSocketAddress socketAddress = new InetSocketAddress(ipAddress, portInput);
-                publishProgress(getString(R.string.making_socket));
-                s.connect(socketAddress, 300);
-                return s;
-            } catch (SocketTimeoutException e) {
-                e.printStackTrace();
-                System.out.println("No connection could be established");
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("An IOException occurred");
-                return null;
-            }
-        }
-        @Override
-        protected void onProgressUpdate(String... values) {
-            if (tvStatus != null) {
-                tvStatus.setText(values[0]);
-            }
+            return new InetSocketAddress(inetAddress, portInput);
         }
 
-        protected void onPostExecute(Socket s) {
+        protected void onPostExecute(InetSocketAddress s) {
             if (s != null) {
-                setTextTvStatus(R.string.connection);
-                socket = s;
+                socketAddress = s;
+                tvStatus.setText(R.string.socket_set);
+                btnBind.setText(R.string.unbind);
             } else {
-                setTextTvStatus(R.string.no_connection);
-            }
-        }
-
-        private void setTextTvStatus(int stringReference) {
-            if (tvStatus != null) {
-                tvStatus.setText(stringReference);
+                btnBind.setText(R.string.bind);
+                tvStatus.setText(R.string.socket_set_failed);
             }
         }
     }
 
-    private class SendMessageOverNetwork extends AsyncTask<String, String, Boolean> {
-        protected Boolean doInBackground(String... params) {
+    private class SendMessageOverNetwork extends AsyncTask<String, String, Integer> {
+        final int SUCCESS = 1;
+        final int IOEXCEPTION = -1;
+        final int NOSOCKET = -2;
+        protected Integer doInBackground(String... params) {
             final String message = params[0];
-            if (socket == null || message == null) {
-                return false;
+            if (socketAddress == null) {
+                return NOSOCKET;
             }
-            if (!socket.isConnected()) {
-                return false;
-            }
-            PrintWriter sOutput;
             try {
+                Socket socket = new Socket();
+                socket.connect(socketAddress, 300);
+                PrintWriter sOutput;
                 sOutput = new PrintWriter(socket.getOutputStream(), true);
+                sOutput.println(message);
+                sOutput.flush();
+
+                sOutput.close(); //not sure if needed
+                socket.close();
+                return SUCCESS;
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                return IOEXCEPTION;
             }
-            sOutput.println(message);
-            sOutput.flush();
-            return true;
+
         }
 
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(Integer result) {
             if (tvStatus != null) {
-                if (result) {
-                    Resources res = getResources();
-                    String text = res.getQuantityString(R.plurals.number_messages_sent, ++messageCounter, messageCounter);
-                    tvStatus.setText(text);
-                } else {
-                    tvStatus.setText(R.string.message_not_sent);
+                switch(result) {
+                    case SUCCESS:
+                        String text = getResources().getQuantityString(R.plurals.number_messages_sent, ++messageCounter, messageCounter);
+                        tvStatus.setText(text);
+                        break;
+                    case IOEXCEPTION:
+                        tvStatus.setText(R.string.connection_failed);
+                        break;
+                    case NOSOCKET:
+                        tvStatus.setText(R.string.no_socket_set);
+                        break;
                 }
             }
         }

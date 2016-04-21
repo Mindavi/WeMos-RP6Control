@@ -50,7 +50,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/no_connection"
+        android:text="@string/no_button_pressed"
         android:id="@+id/tvConnectionStatus"
         android:layout_marginTop="100dp"
         android:gravity="center_horizontal"
@@ -84,11 +84,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/connect"
-        android:id="@+id/btnConnect"
+        android:text="@string/bind"
+        android:id="@+id/btnBind"
         android:layout_below="@+id/tbPortNumber"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        android:onClick="connect_click"/>
+        android:onClick="bind_click"/>
 
 </RelativeLayout>
