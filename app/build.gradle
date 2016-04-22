@@ -8,8 +8,6 @@ android {
         applicationId "com.example.rick.testbuttons"
         minSdkVersion 23
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.1"
     }
     buildTypes {
         release {
