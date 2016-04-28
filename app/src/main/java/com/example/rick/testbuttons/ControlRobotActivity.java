@@ -122,7 +122,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     private class SendMessageOverNetwork extends AsyncTask<String, String, Integer> {
-        final int SUCCESS = 1;
+        final int SUCCESS = 0;
         final int IOEXCEPTION = -1;
         final int NOSOCKET = -2;
         protected Integer doInBackground(String... params) {
