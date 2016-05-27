@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RP6 Besturing</string>
-    <string name="connection_failed">Er kon geen verbinding worden gemaakt.</string>
+    <string name="connection_failed">Er kon geen verbinding worden gemaakt</string>
     <string name="backward">Achteruit</string>
     <string name="ip_address">IP adres</string>
     <string name="left">Links</string>
-    <string name="no_button_pressed">Geen knop ingedrukt.</string>
+    <string name="no_button_pressed">Geen knop ingedrukt</string>
     <string name="right">Rechts</string>
     <string name="forward">Vooruit</string>
     <string name="port_number">Poortnummer</string>
-    <string name="invalid_port_number">Ongeldig poortnummer ingevoerd.</string>
-    <string name="message_not_sent">Bericht niet verzonden.</string>
+    <string name="invalid_port_number">Ongeldig poortnummer ingevoerd</string>
+    <string name="message_not_sent">Bericht niet verzonden</string>
     <string name="bind">Koppel</string>
     <string name="unbind">Ontkoppel</string>
     <plurals name="number_messages_sent">
-        <item quantity="one">%d bericht verzonden.</item>
-        <item quantity="other">%d berichten verzonden.</item>
+        <item quantity="one">%d bericht verzonden</item>
+        <item quantity="other">%d berichten verzonden</item>
     </plurals>
     <string name="socket_set">Socket ingesteld.</string>
-    <string name="socket_set_failed">Socket instellen mislukt.</string>
-    <string name="unbind_done">Verbindingsadres verwijderd, voer een nieuw adres in.</string>
-    <string name="no_socket_set">Geen socket ingesteld. Voer er een in en koppel deze.</string>
+    <string name="socket_set_failed">Socket instellen mislukt</string>
+    <string name="unbind_done">Verbindingsadres verwijderd, voer een nieuw adres in</string>
+    <string name="no_socket_set">Geen socket ingesteld, voer er een in en koppel deze</string>
     <string name="speed">Snelheid: %1$d</string>
 </resources>

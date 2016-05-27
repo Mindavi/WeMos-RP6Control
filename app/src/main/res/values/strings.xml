@@ -2,25 +2,25 @@
 <resources>
 
     <string name="app_name">RP6 Control</string>
-    <string name="connection_failed">No connection could be made.</string>
+    <string name="connection_failed">No connection could be made</string>
     <string name="ip_address">IP address</string>
     <string name="forward">Forward</string>
     <string name="backward">Backward</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
-    <string name="no_button_pressed">No button pressed.</string>
+    <string name="no_button_pressed">No button pressed</string>
     <string name="port_number">Port number</string>
-    <string name="invalid_port_number">An invalid port number was entered.</string>
-    <string name="message_not_sent">Message was not sent.</string>
+    <string name="invalid_port_number">An invalid port number was entered</string>
+    <string name="message_not_sent">Message was not sent</string>
     <string name="bind">Bind</string>
     <plurals name="number_messages_sent">
-        <item quantity="one">%d message sent.</item>
-        <item quantity="other">%d messages sent.</item>
+        <item quantity="one">%d message sent</item>
+        <item quantity="other">%d messages sent</item>
     </plurals>
-    <string name="socket_set">Socket set.</string>
-    <string name="socket_set_failed">Socket setting failed.</string>
+    <string name="socket_set">Socket set</string>
+    <string name="socket_set_failed">Socket setting failed</string>
     <string name="unbind">Unbind</string>
-    <string name="unbind_done">Removed connection address, enter a new address.</string>
-    <string name="no_socket_set">No socket is set. Enter one and bind it.</string>
+    <string name="unbind_done">Removed connection address, enter a new address</string>
+    <string name="no_socket_set">No socket is set, enter one and bind it</string>
     <string name="speed">Speed: %1$d</string>
 </resources>
