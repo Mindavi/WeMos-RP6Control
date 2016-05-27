@@ -54,7 +54,8 @@
         android:id="@+id/tvConnectionStatus"
         android:gravity="center_horizontal"
         android:layout_below="@+id/sbSpeed"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp" />
 
     <EditText
         android:hint="@string/ip_address"
@@ -94,12 +95,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sbSpeed"
-        android:layout_below="@+id/btnDown"
-        android:layout_alignStart="@+id/btnLeft"
-        android:layout_alignEnd="@+id/btnRight"
         android:max="130"
         android:indeterminate="false"
-        android:progress="1" />
+        android:progress="1"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/btnDown"
+        android:layout_alignStart="@+id/btnLeft"
+        android:layout_alignEnd="@+id/btnRight" />
 
     <TextView
         android:layout_width="wrap_content"
