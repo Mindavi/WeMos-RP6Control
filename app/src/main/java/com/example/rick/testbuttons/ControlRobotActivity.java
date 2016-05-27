@@ -1,12 +1,16 @@
 package com.example.rick.testbuttons;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,10 +19,13 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 public class ControlRobotActivity extends AppCompatActivity {
     private TextView tvStatus;
     private Button btnBind;
+    private SeekBar sbSpeed;
+    private TextView lblSpeed;
     private SocketAddress socketAddress;
     private int messageCounter;
 
@@ -28,6 +35,27 @@ public class ControlRobotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_controlrobot);
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
         btnBind = (Button) findViewById(R.id.btnBind);
+        sbSpeed = (SeekBar) findViewById(R.id.sbSpeed);
+        lblSpeed = (TextView) findViewById(R.id.lblSpeed);
+        if (sbSpeed != null) {
+            sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    SendMessage("SPEED:" + Integer.toString(seekBar.getProgress()));
+                    lblSpeed.setText(String.format(getResources().getString(R.string.speed), seekBar.getProgress()));
+                }
+            });
+        }
         socketAddress = null;
         messageCounter = 0;
     }
@@ -166,4 +194,3 @@ public class ControlRobotActivity extends AppCompatActivity {
         }
     }
 }
-

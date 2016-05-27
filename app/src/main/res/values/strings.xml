@@ -22,4 +22,5 @@
     <string name="unbind">Unbind</string>
     <string name="unbind_done">Removed connection address, enter a new address.</string>
     <string name="no_socket_set">No socket is set. Enter one and bind it.</string>
+    <string name="speed">Speed: %1$d</string>
 </resources>

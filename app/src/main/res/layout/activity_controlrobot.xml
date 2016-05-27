@@ -53,7 +53,7 @@
         android:text="@string/no_button_pressed"
         android:id="@+id/tvConnectionStatus"
         android:gravity="center_horizontal"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/sbSpeed"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -89,5 +89,24 @@
         android:layout_centerHorizontal="true"
         android:clickable="true"
         android:onClick="bind_click"/>
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sbSpeed"
+        android:layout_below="@+id/btnDown"
+        android:layout_alignStart="@+id/btnLeft"
+        android:layout_alignEnd="@+id/btnRight"
+        android:max="130"
+        android:indeterminate="false"
+        android:progress="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/lblSpeed"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
