@@ -12,15 +12,14 @@
     <string name="port_number">Port number</string>
     <string name="invalid_port_number">An invalid port number was entered</string>
     <string name="message_not_sent">Message was not sent</string>
-    <string name="bind">Bind</string>
     <plurals name="number_messages_sent">
         <item quantity="one">%d message sent</item>
         <item quantity="other">%d messages sent</item>
     </plurals>
-    <string name="socket_set">Socket set</string>
-    <string name="socket_set_failed">Socket setting failed</string>
-    <string name="unbind">Unbind</string>
-    <string name="unbind_done">Removed connection address, enter a new address</string>
-    <string name="no_socket_set">No socket is set, enter one and bind it</string>
-    <string name="speed">Speed: %1$d</string>
+    <string name="speed_param">Speed: %1$d</string>
+    <string name="speed">Speed</string>
+    <string name="connect">Connect</string>
+    <string name="info">Info</string>
+    <string name="connection_lost">Connection lost, try reconnecting</string>
+    <string name="no_socket_set">No socket is set, retry entering it</string>
 </resources>

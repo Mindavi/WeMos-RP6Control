@@ -1,7 +1,12 @@
 package com.example.rick.testbuttons;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.w3c.dom.Text;
 
@@ -23,41 +30,44 @@ import java.util.Locale;
 
 public class ControlRobotActivity extends AppCompatActivity {
     private TextView tvStatus;
-    private Button btnBind;
     private SeekBar sbSpeed;
-    private TextView lblSpeed;
     private SocketAddress socketAddress;
     private int messageCounter;
+    private TextView tvSpeedOnBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlrobot);
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
-        btnBind = (Button) findViewById(R.id.btnBind);
         sbSpeed = (SeekBar) findViewById(R.id.sbSpeed);
-        lblSpeed = (TextView) findViewById(R.id.lblSpeed);
+        tvSpeedOnBar = (TextView) findViewById(R.id.tvSpeedOnBar);
         if (sbSpeed != null) {
             sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                    if (tvSpeedOnBar != null) {
+                        String sSpeed = String.format(getResources().getString(R.string.speed_param), progress);
+                        tvSpeedOnBar.setText(sSpeed);
+                    }
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
+                public void onStartTrackingTouch(SeekBar seekBar) {}
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    SendMessage("SPEED:" + Integer.toString(seekBar.getProgress()));
-                    lblSpeed.setText(String.format(getResources().getString(R.string.speed), seekBar.getProgress()));
+                    int speed = seekBar.getProgress();
+                    SendMessage("SPEED:" + Integer.toString(speed));
                 }
             });
         }
         socketAddress = null;
         messageCounter = 0;
+        IntentFilter intentFilter = new IntentFilter(
+                ConnectionConstants.MESSAGE_BROADCAST_ACTION);
+        ResponseReceiver responseReceiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(responseReceiver, intentFilter);
     }
 
     public void down_click(View view) {
@@ -76,120 +86,47 @@ public class ControlRobotActivity extends AppCompatActivity {
         SendMessage("FORWARD");
     }
 
-    public void bind_click(View view) {
-        if (socketAddress != null) {
-            socketAddress = null;
-            tvStatus.setText(R.string.unbind_done);
-            btnBind.setText(R.string.bind);
-            messageCounter = 0;
-        } else {
-            new MakeSocketAddress().execute();
-        }
-    }
-
     private void SendMessage(String message) {
         String finalMessage = "#" + message + "%";
-        new SendMessageOverNetwork().execute(finalMessage);
+        Intent makeConnectionIntent = new Intent(this, ConnectionService.class);
+        makeConnectionIntent.setAction(ConnectionService.ACTION_SEND_MESSAGE);
+        makeConnectionIntent.putExtra(ConnectionService.EXTRA_MESSAGE, finalMessage);
+        startService(makeConnectionIntent);
     }
 
-    private class MakeSocketAddress extends AsyncTask<Void, String, InetSocketAddress> {
-        private String ipInput;
-        private int portInput;
-
-        private MakeSocketAddress() {
-            ipInput = null;
-            portInput = 0;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            EditText tbIpAddress = (EditText) findViewById(R.id.tbIpAddress);
-            EditText tbPortNumber = (EditText) findViewById(R.id.tbPortNumber);
-            String portString = null;
-
-            if (tbIpAddress != null) {
-                ipInput = tbIpAddress.getText().toString();
-            }
-            if (tbPortNumber != null) {
-                portString = tbPortNumber.getText().toString();
-            }
-            try {
-                portInput = Integer.parseInt(portString);
-            }
-            catch (NumberFormatException e) {
-                e.printStackTrace();
-                TextView connStatus = (TextView) findViewById(R.id.tvConnectionStatus);
-                if (connStatus != null) {
-                    connStatus.setText(R.string.invalid_port_number);
-                }
-                cancel(true);
-            }
-        }
-
-        protected InetSocketAddress doInBackground(Void... voids) {
-            InetAddress inetAddress;
-            try {
-                inetAddress = InetAddress.getByName(ipInput);
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-                return null;
-            }
-            return new InetSocketAddress(inetAddress, portInput);
-        }
-
-        protected void onPostExecute(InetSocketAddress s) {
-            if (s != null) {
-                socketAddress = s;
-                tvStatus.setText(R.string.socket_set);
-                btnBind.setText(R.string.unbind);
-            } else {
-                btnBind.setText(R.string.bind);
-                tvStatus.setText(R.string.socket_set_failed);
-            }
+    private void ShowInfo(String info) {
+        Assert.assertNotNull(info);
+        if (tvStatus != null) {
+            tvStatus.setText(info);
         }
     }
 
-    private class SendMessageOverNetwork extends AsyncTask<String, String, Integer> {
-        final int SUCCESS = 0;
-        final int IOEXCEPTION = -1;
-        final int NOSOCKET = -2;
-        protected Integer doInBackground(String... params) {
-            final String message = params[0];
-            if (socketAddress == null) {
-                return NOSOCKET;
-            }
-            try {
-                Socket socket = new Socket();
-                socket.connect(socketAddress, 300);
-                PrintWriter sOutput;
-                sOutput = new PrintWriter(socket.getOutputStream(), true);
-                sOutput.println(message);
-                sOutput.flush();
-
-                sOutput.close(); //not sure if needed
-                socket.close();
-                return SUCCESS;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return IOEXCEPTION;
-            }
-
+    // Broadcast receiver for receiving status updates from the IntentService
+    private class ResponseReceiver extends BroadcastReceiver
+    {
+        private ResponseReceiver() {
         }
+        // Called when the BroadcastReceiver gets an Intent it's registered to receive
+        public void onReceive(Context context, Intent intent) {
+            TextView tvInfo = (TextView) findViewById(R.id.tvInfo);
+            int status = intent.getIntExtra(ConnectionConstants.EXTENDED_SEND_MESSAGE_DATA, -1);
+            if (status == ConnectionConstants.Success) {
+                messageCounter++;
+                String messagesSent = getResources().getQuantityString(R.plurals.number_messages_sent, messageCounter, messageCounter);
+                ShowInfo(messagesSent);
+            }
+            else if (status == ConnectionConstants.NoSocket) {
+                ShowInfo(getString(R.string.no_socket_set));
+            }
+            else if (status == ConnectionConstants.PrintWriterError) {
+                // retry connecting?
+                System.out.println("Error with printwriter");
+                ShowInfo(getString(R.string.connection_lost));
 
-        protected void onPostExecute(Integer result) {
-            if (tvStatus != null) {
-                switch(result) {
-                    case SUCCESS:
-                        String text = getResources().getQuantityString(R.plurals.number_messages_sent, ++messageCounter, messageCounter);
-                        tvStatus.setText(text);
-                        break;
-                    case IOEXCEPTION:
-                        tvStatus.setText(R.string.connection_failed);
-                        break;
-                    case NOSOCKET:
-                        tvStatus.setText(R.string.no_socket_set);
-                        break;
-                }
+
+            }
+            else if (status == -1) {
+                throw new IllegalStateException("should not be -1 in ResponseReceiver");
             }
         }
     }

@@ -53,43 +53,9 @@
         android:text="@string/no_button_pressed"
         android:id="@+id/tvConnectionStatus"
         android:gravity="center_horizontal"
+        android:layout_marginTop="57dp"
         android:layout_below="@+id/sbSpeed"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp" />
-
-    <EditText
-        android:hint="@string/ip_address"
-        android:inputType="textUri"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/tbIpAddress"
-        android:gravity="center"
-        android:layout_below="@+id/tvConnectionStatus"
-        android:layout_alignStart="@+id/tvConnectionStatus" />
-
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/tbPortNumber"
-        android:clickable="false"
-        android:hint="@string/port_number"
-        android:textSize="15sp"
-        android:gravity="center"
-        android:layout_alignTop="@+id/tbIpAddress"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bind"
-        android:id="@+id/btnBind"
-        android:layout_below="@+id/tbPortNumber"
-        android:layout_centerHorizontal="true"
-        android:clickable="true"
-        android:onClick="bind_click"/>
+        android:layout_centerHorizontal="true" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -101,14 +67,19 @@
         android:layout_marginTop="17dp"
         android:layout_below="@+id/btnDown"
         android:layout_alignStart="@+id/btnLeft"
-        android:layout_alignEnd="@+id/btnRight" />
+        android:layout_alignEnd="@+id/btnRight"
+        android:minHeight="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/lblSpeed"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:text="@string/speed"
+        android:id="@+id/tvSpeedOnBar"
+        android:layout_alignTop="@+id/sbSpeed"
+        android:layout_alignBottom="@+id/sbSpeed"
+        android:layout_alignEnd="@+id/sbSpeed"
+        android:layout_alignStart="@+id/sbSpeed"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
 </RelativeLayout>

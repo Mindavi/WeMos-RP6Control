@@ -6,20 +6,33 @@
     android:versionName="2.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup"> <!-- done so lint won't complain about data that can be synced with the cloud. we don't have any data whatsoever to sync right now -->
+        tools:ignore="AllowBackup">
+
+        <!-- done so lint won't complain about data that can be synced with the cloud. we don't have any data whatsoever to sync right now -->
         <activity android:name=".ControlRobotActivity">
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ConnectActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".ConnectionService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
