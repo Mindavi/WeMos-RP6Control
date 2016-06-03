@@ -30,13 +30,6 @@ public class ConnectActivity extends Activity {
         etPortNumber = (EditText) findViewById(R.id.etPortNumber);
     }
 
-    /*protected void sendMessage_click(View view) {
-        Intent sendMessageIntent = new Intent(this, ConnectionService.class);
-        sendMessageIntent.setAction(ConnectionService.ACTION_SEND_MESSAGE);
-        sendMessageIntent.putExtra(ConnectionService.EXTRA_MESSAGE, "hi friend\n");
-        startService(sendMessageIntent);
-    }*/
-
     protected void connect_click(View view) {
         String ipAddress = null;
         int portNumber = 0;

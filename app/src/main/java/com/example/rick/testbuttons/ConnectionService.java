@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,23 +14,12 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+
 public class ConnectionService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_SEND_MESSAGE = "com.example.rick.testbuttons.action.SEND_MESSAGE";
     public static final String ACTION_MAKE_CONNECTION = "com.example.rick.testbuttons.action.MAKE_CONNECTION";
 
-    // TODO: Rename parameters
     public static final String EXTRA_IPADDRESS = "com.example.rick.testbuttons.extra.IPADDRESS";
     public static final String EXTRA_PORT = "com.example.rick.testbuttons.extra.PORT";
     public static final String EXTRA_MESSAGE = "com.example.rick.testbuttons.extra.MESSAGE";
@@ -85,7 +72,7 @@ public class ConnectionService extends IntentService {
     }
 
     /**
-     * Handle action Foo in the provided background thread with the provided
+     * Handle action Connect in the provided background thread with the provided
      * parameters.
      */
     private void handleActionConnect(String ipAddress, int port) {
@@ -140,22 +127,20 @@ public class ConnectionService extends IntentService {
             }
             localIntent.putExtra(ConnectionConstants.EXTENDED_DATA_STATUS, (connection ? ConnectionConstants.Connected : ConnectionConstants.NotConnected));
             LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
-            System.out.println("sent intent and got " + (connection ? "connection" : "no connection"));
+            //System.out.println("sent intent and got " + (connection ? "connection" : "no connection"));
         }
     }
 
     private class SendMessageOverNetwork extends AsyncTask<String, String, Integer> {
         protected Integer doInBackground(String... params) {
             final String message = params[0];
-            //System.out.println("Message: " + message);
             if (socket == null) {
-                System.out.println("socket was null");
                 return ConnectionConstants.NoSocket;
             }
             if (sOutput.checkError()) {
-                //System.out.println("printwritererror");
                 return ConnectionConstants.PrintWriterError;
             }
+            // newline is added
             sOutput.println(message);
             sOutput.flush();
             return ConnectionConstants.Success;
