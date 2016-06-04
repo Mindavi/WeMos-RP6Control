@@ -30,7 +30,7 @@ public class ConnectActivity extends Activity {
         etPortNumber = (EditText) findViewById(R.id.etPortNumber);
     }
 
-    protected void connect_click(View view) {
+    public void connect_click(View view) {
         String ipAddress = null;
         int portNumber = 0;
         if (etIpAddress != null && etPortNumber != null) {
