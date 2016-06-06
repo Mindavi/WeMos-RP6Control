@@ -16,10 +16,12 @@
         <item quantity="one">%d message sent</item>
         <item quantity="other">%d messages sent</item>
     </plurals>
-    <string name="speed_param">Speed: %1$d</string>
+    <string name="speed_param">Speed: %1$d (max: %2$d)</string>
     <string name="speed">Speed</string>
     <string name="connect">Connect</string>
     <string name="info">Info</string>
     <string name="connection_lost">Connection lost, try reconnecting</string>
     <string name="no_socket_set">No socket is set, retry entering it</string>
+    <string name="maxspeed_invalid">Invalid maxspeed received</string>
+    <string name="unknown_host">Unknown host entered</string>
 </resources>

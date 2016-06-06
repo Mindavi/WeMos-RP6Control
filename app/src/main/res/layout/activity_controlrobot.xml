@@ -63,7 +63,7 @@
         android:id="@+id/sbSpeed"
         android:max="130"
         android:indeterminate="false"
-        android:progress="1"
+        android:progress="0"
         android:layout_marginTop="17dp"
         android:layout_below="@+id/btnDown"
         android:layout_alignStart="@+id/btnLeft"

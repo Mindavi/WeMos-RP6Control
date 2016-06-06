@@ -16,9 +16,11 @@
         <item quantity="one">%d bericht verzonden</item>
         <item quantity="other">%d berichten verzonden</item>
     </plurals>
-    <string name="speed_param">Snelheid: %1$d</string>
+    <string name="speed_param">Snelheid: %1$d (max: %2$d)</string>
     <string name="speed">Snelheid</string>
     <string name="info">Info</string>
     <string name="connection_lost">Verbinding verloren, probeer opnieuw te verbinden</string>
     <string name="no_socket_set">Geen socket ingesteld, probeer deze opnieuw in te stellen</string>
+    <string name="maxspeed_invalid">Ongeldige maximum snelheid ontvangen</string>
+    <string name="unknown_host">Onbekende host ingevuld</string>
 </resources>
