@@ -20,11 +20,12 @@ public class ControlRobotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlrobot);
-        maxSpeed = 130;
+        maxSpeed = MAXIMUMSPEEDALLOWED;
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
         sbSpeed = (SeekBar) findViewById(R.id.sbSpeed);
         tvSpeedOnBar = (TextView) findViewById(R.id.tvSpeedOnBar);
         if (sbSpeed != null) {
+            sbSpeed.setMax(MAXIMUMSPEEDALLOWED);
             sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -96,19 +97,19 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     public void down_click(View view) {
-        SendMessage(Command.BACKWARD.toString());
+        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.BACKWARD));
     }
 
     public void right_click(View view) {
-        SendMessage(Command.RIGHT.toString());
+        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.RIGHT));
     }
 
     public void left_click(View view) {
-        SendMessage(Command.LEFT.toString());
+        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.LEFT));
     }
 
     public void up_click(View view) {
-        SendMessage(Command.FORWARD.toString());
+        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.FORWARD));
     }
 
     private void SendMessage(String message) {

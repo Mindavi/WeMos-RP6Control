@@ -112,6 +112,10 @@ public class ConnectionManager {
                 state = (int) list.get(0);
             }
             System.out.println("got " + (state == ConnectionConstants.Connected ? "connection" : "no connection"));
+            if (state == ConnectionConstants.Connected) {
+                // if connected, send identification message
+                sendMessage(Command.CommandStringBuilder(Command.CONTROL, "BestuurderApp"));
+            }
             if (connectionCallback != null) {
                 connectionCallback.connectionAttemptMade(state);
             }
