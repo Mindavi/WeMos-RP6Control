@@ -2,6 +2,7 @@ package com.example.rick.testbuttons;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import junit.framework.Assert;
 
 public class ControlRobotActivity extends AppCompatActivity {
+    private final String TAG = "ControlRobotActivity";
     private TextView tvStatus;
     private int messageCounter;
     private TextView tvSpeedOnBar;
@@ -22,8 +24,21 @@ public class ControlRobotActivity extends AppCompatActivity {
     private Command.DIRECTION verticalDirection;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ConnectionManager.getInstance().disconnect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ConnectionManager.getInstance().disconnect();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        verticalDirection = Command.DIRECTION.FORWARD; // initialise on forward?
         setContentView(R.layout.activity_controlrobot);
         maxSpeed = MAXIMUM_SPEED_ALLOWED;
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
@@ -99,7 +114,7 @@ public class ControlRobotActivity extends AppCompatActivity {
             @Override
             public void callBackMessageReceived(Command command, String arg) {
                 parseCommand(command, arg);
-                System.out.printf("Received command:%s with argument:%s\n", command.toString(), arg);
+                Log.v(TAG, String.format("Received command:%s with argument:%s\n", command.toString(), arg));
             }
         });
         ConnectionManager.getInstance().startMessageReceiver();

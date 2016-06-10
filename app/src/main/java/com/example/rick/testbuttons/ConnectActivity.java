@@ -30,6 +30,7 @@ public class ConnectActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Click!");
+                ConnectionManager.getInstance().stopMessageReceiver();
                 String ipAddress = null;
                 int portNumber = 0;
                 if (etIpAddress != null && etPortNumber != null) {
@@ -69,7 +70,11 @@ public class ConnectActivity extends Activity {
                         info.setText(R.string.unknown_host);
                         break;
                     case ConnectionConstants.Undefined:
-                        System.out.println("Something went wrong, connectionattemp gave undefined");
+                        System.out.println("Something went wrong, connection attempt gave undefined");
+                        break;
+                    default:
+                        Log.v(TAG, "Shouldn't ever happen");
+                        break;
                 }
             }
         });

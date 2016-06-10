@@ -38,11 +38,29 @@ public class ConnectionManager {
     }
 
     private ConnectionManager() {
+        Log.v(TAG, "ConnectionManager was created");
     }
 
     public void connect(String ipAddress, int port) {
-        System.out.printf("Connect has been called with ipAddress:%s and port:%d", ipAddress, port);
+        Log.v(TAG, String.format("Connect has been called with ipAddress:%s and port:%d", ipAddress, port));
         new MakeConnection().execute(ipAddress, String.valueOf(port));
+    }
+
+    public void disconnect() {
+        Log.v(TAG, "Disconnecting...");
+        try {
+            if (sInput != null) {
+                sInput.close();
+            }
+            if (sOutput != null) {
+                sOutput.close();
+            }
+            if (socket != null && !socket.isClosed() && socket.isConnected()) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            // don't worry be happy
+        }
     }
 
     public void setListener(MessageCallBack callBack) {
@@ -73,9 +91,11 @@ public class ConnectionManager {
         private MakeConnection() {
             ipInput = null;
             portInput = 0;
+            Log.v(TAG, "MakeConnection object created");
         }
 
         protected ArrayList<Object> doInBackground(String... strings) {
+            Log.v(TAG, "Starting connection initiation");
             Socket tmpSocket;
             PrintWriter tmpSOutput;
             BufferedReader tmpSInput;
@@ -114,17 +134,20 @@ public class ConnectionManager {
                 sOutput = (PrintWriter) list.get(1);
                 sInput = (BufferedReader) list.get(2);
                 state = (int) list.get(3);
-                System.out.println(socket.toString());
+                Log.v(TAG, socket.toString());
             } else if (listNotEmpty && list.size() == 1) {
                 state = (int) list.get(0);
             }
             Log.v(TAG, "got " + (state == ConnectionConstants.Connected ? "connection" : "no connection"));
             if (state == ConnectionConstants.Connected) {
                 // if connected, send identification message
-                sendMessage(Command.CommandStringBuilder(Command.CONTROL, "BestuurderApp"));
+                sendMessage(Command.CommandStringBuilder(Command.CONTROL, "BeefburgerApp"));
             }
             if (connectionCallback != null) {
+                Log.v(TAG, connectionCallback.getClass().getSimpleName());
                 connectionCallback.connectionAttemptMade(state);
+            } else {
+                Log.v(TAG, "No connectionCallback set");
             }
         }
     }
@@ -134,20 +157,19 @@ public class ConnectionManager {
             State state = State.wait;
             String command = "";
             String arg = "";
-            if (socket == null) {
+            if (socket == null || sInput == null || sOutput == null) {
+                Log.v(TAG, "Something seems to be null");
                 return null;
             }
 
             try {
+                Log.v(TAG, String.format("ReceiveMessages:%b", receiveMessages));
                 while (receiveMessages) {
                     if (socket == null || sInput == null || socket.isClosed() || !socket.isConnected()) {
                         Log.v(TAG, "Invalid something");
                         break;
                     }
-                    if (sInput == null) {
-                        break;
-                    }
-                    int c = sInput.read();
+                    int c = sInput.read(); // this call is blocking, so the thread does not have to sleep otherwise
                     if (c < 0) {
                         break;
                     }
@@ -162,8 +184,7 @@ public class ConnectionManager {
                             case receiveCommand:
                                 if (ch == ':') {
                                     state = State.receiveArg;
-                                }
-                                else if (ch == '$') {
+                                } else if (ch == '$') {
                                     publishProgress(command, arg);
                                     command = arg = "";
                                     state = State.wait;
@@ -182,12 +203,6 @@ public class ConnectionManager {
                         }
                         if (command.length() > MAX_COMMAND_LENGTH || arg.length() > MAX_ARG_LENGTH) {
                             publishProgress(Command.MAX_LENGTH_ERROR.toString(), "");
-                        }
-                    } else {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
                         }
                     }
                 }
