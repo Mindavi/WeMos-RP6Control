@@ -145,12 +145,13 @@ public class ControlRobotActivity extends AppCompatActivity {
                     updateSpeedString();
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
-                    System.out.println("Invalid speed");
+                    Log.v(TAG, "Invalid speed");
                     ShowInfo(getString(R.string.maxspeed_invalid));
                 }
                 break;
             case CONNECTION_ERROR:
                 ShowInfo(getString(R.string.connection_lost));
+                Log.v(TAG, "Connection lost");
                 break;
         }
     }

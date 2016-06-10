@@ -43,7 +43,7 @@ public class ConnectActivity extends Activity {
                 }
 
                 if (ipAddress == null || ipAddress.trim().length() < 1 || portNumber < 1) {
-                    System.out.println("Ip: " + (ipAddress == null ? "null" : ipAddress) + "Port: " + portNumber);
+                    Log.v(TAG, "Ip: " + (ipAddress == null ? "null" : ipAddress) + " Port: " + portNumber);
                     return;
                 }
                 ConnectionManager.getInstance().connect(ipAddress, portNumber);
@@ -70,7 +70,7 @@ public class ConnectActivity extends Activity {
                         info.setText(R.string.unknown_host);
                         break;
                     case ConnectionConstants.Undefined:
-                        System.out.println("Something went wrong, connection attempt gave undefined");
+                        Log.v(TAG, "Something went wrong, connection attempt gave undefined");
                         break;
                     default:
                         Log.v(TAG, "Shouldn't ever happen");

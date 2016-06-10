@@ -47,7 +47,7 @@ public class ConnectionManager {
     }
 
     public void disconnect() {
-        Log.v(TAG, "Disconnecting...");
+        Log.v(TAG, "Disconnect");
         try {
             if (sInput != null) {
                 sInput.close();
