@@ -1,6 +1,7 @@
 package com.example.rick.testbuttons;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,17 +18,23 @@ import java.util.ArrayList;
  * Created by Rick on 6-6-2016.
  */
 public class ConnectionManager {
-    private final int MAXCOMMANDLENGTH = 50;
-    private final int MAXARGLENGTH = 10;
+    private final String TAG = "ConnectionManager";
+    private final int MAX_COMMAND_LENGTH = 50;
+    private final int MAX_ARG_LENGTH = 10;
     private Socket socket;
     private PrintWriter sOutput;
     private BufferedReader sInput;
     private MessageCallBack listener;
     private ConnectionCallback connectionCallback;
     private static ConnectionManager ourInstance = new ConnectionManager();
+    private volatile boolean receiveMessages = false;
 
     public static ConnectionManager getInstance() {
         return ourInstance;
+    }
+
+    public void stopMessageReceiver() {
+        receiveMessages = false;
     }
 
     private ConnectionManager() {
@@ -53,6 +60,7 @@ public class ConnectionManager {
     }
 
     public void startMessageReceiver() {
+        receiveMessages = true;
         new MessageReceiver().execute();
     }
 
@@ -68,7 +76,6 @@ public class ConnectionManager {
         }
 
         protected ArrayList<Object> doInBackground(String... strings) {
-
             Socket tmpSocket;
             PrintWriter tmpSOutput;
             BufferedReader tmpSInput;
@@ -111,7 +118,7 @@ public class ConnectionManager {
             } else if (listNotEmpty && list.size() == 1) {
                 state = (int) list.get(0);
             }
-            System.out.println("got " + (state == ConnectionConstants.Connected ? "connection" : "no connection"));
+            Log.v(TAG, "got " + (state == ConnectionConstants.Connected ? "connection" : "no connection"));
             if (state == ConnectionConstants.Connected) {
                 // if connected, send identification message
                 sendMessage(Command.CommandStringBuilder(Command.CONTROL, "BestuurderApp"));
@@ -123,7 +130,6 @@ public class ConnectionManager {
     }
 
     private class MessageReceiver extends AsyncTask<Void, String, Void> {
-
         protected Void doInBackground(Void... voids) {
             State state = State.wait;
             String command = "";
@@ -133,7 +139,11 @@ public class ConnectionManager {
             }
 
             try {
-                while (true) {
+                while (receiveMessages) {
+                    if (socket == null || sInput == null || socket.isClosed() || !socket.isConnected()) {
+                        Log.v(TAG, "Invalid something");
+                        break;
+                    }
                     if (sInput == null) {
                         break;
                     }
@@ -147,7 +157,6 @@ public class ConnectionManager {
                             case wait:
                                 if (ch == '%') {
                                     state = State.receiveCommand;
-                                    System.out.println("receiving...");
                                 }
                                 break;
                             case receiveCommand:
@@ -171,7 +180,7 @@ public class ConnectionManager {
                                     arg += ch;
                                 }
                         }
-                        if (command.length() > MAXCOMMANDLENGTH || arg.length() > MAXARGLENGTH) {
+                        if (command.length() > MAX_COMMAND_LENGTH || arg.length() > MAX_ARG_LENGTH) {
                             publishProgress(Command.MAX_LENGTH_ERROR.toString(), "");
                         }
                     } else {
@@ -209,7 +218,7 @@ public class ConnectionManager {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            System.out.println("Connection lost");
+            Log.v(TAG, "Connection lost");
             if (listener != null) {
                 listener.callBackMessageReceived(Command.CONNECTION_ERROR, "");
             }

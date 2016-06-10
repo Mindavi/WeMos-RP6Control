@@ -25,14 +25,13 @@
         android:layout_height="wrap_content"
         android:text="@string/connect"
         android:id="@+id/btnConnect"
-        android:onClick="connect_click"
         android:layout_marginBottom="36dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
     <EditText
         android:hint="@string/ip_address"
-        android:inputType="textUri"
+        android:inputType="number|textUri"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/etIpAddress"
