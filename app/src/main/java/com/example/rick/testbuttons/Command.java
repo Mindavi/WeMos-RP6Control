@@ -5,7 +5,7 @@ import java.util.Enumeration;
 /**
  * Created by Rick on 6-6-2016.
  */
-public enum Command {
+public enum Command implements ICommand {
     MAXSPEED,
     SPEED,
     MAX_LENGTH_ERROR,
@@ -23,7 +23,7 @@ public enum Command {
         return String.format("%s:%s", DIRECTION.class.getSimpleName(), direction);
     }
 
-    public static String CommandStringBuilder(Command command, String arg) {
+    public static String CommandStringBuilder(ICommand command, String arg) {
         return String.format("%s:%s", command, arg);
     }
 
