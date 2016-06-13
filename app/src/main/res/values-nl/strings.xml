@@ -3,10 +3,6 @@
     <string name="app_name">RP6 Besturing</string>
     <string name="no_button_pressed">Geen knop ingedrukt</string>
     <string name="connection_failed">Er kon geen verbinding worden gemaakt, controleer of je met het goede netwerk verbonden bent</string>
-    <string name="backward">Achteruit</string>
-    <string name="left">Links</string>
-    <string name="right">Rechts</string>
-    <string name="forward">Vooruit</string>
     <string name="ip_address">IP adres</string>
     <string name="port_number">Poortnummer</string>
     <string name="invalid_port_number">Ongeldig poortnummer ingevoerd</string>
@@ -23,4 +19,5 @@
     <string name="no_socket_set">Geen socket ingesteld, probeer deze opnieuw in te stellen</string>
     <string name="maxspeed_invalid">Ongeldige maximum snelheid ontvangen</string>
     <string name="unknown_host">Onbekende host ingevuld</string>
+    <string name="message">Bericht</string>
 </resources>

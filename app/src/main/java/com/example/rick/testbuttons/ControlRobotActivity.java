@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -25,6 +23,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     private int oldAngle = 0;
     private Command.DIRECTION oldYDirection;
     private Command.DIRECTION oldXDirection;
+    final int MAX_ANGLE = 100;
 
     @Override
     public void onBackPressed() {
@@ -51,8 +50,6 @@ public class ControlRobotActivity extends AppCompatActivity {
             relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    int deltaX = Math.round(Math.abs(oldX - event.getX()));
-                    int deltaY = Math.round(Math.abs(oldY - event.getY()));
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_UP:
                             SendMessage(Command.CommandStringBuilder(Command.SPEED, 0));
@@ -60,10 +57,9 @@ public class ControlRobotActivity extends AppCompatActivity {
                     }
                     Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none
                     Command.DIRECTION xDirection = Command.DIRECTION.NONE;
-                    oldX = Math.round(event.getX());
-                    oldY = Math.round(event.getY());
-                    int middleY = v.getHeight() / 2;
-                    int middleX = v.getWidth() / 2;
+                    float middleY = v.getHeight() / 2;
+                    float middleX = v.getWidth() / 2;
+                    Log.v(TAG, "middleY:" + String.valueOf(middleY));
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             return true;
@@ -90,12 +86,11 @@ public class ControlRobotActivity extends AppCompatActivity {
                                 xDirection = Command.DIRECTION.LEFT;
                                 setAngle = true;
                             } else {
-                                angle = 0;
                                 xDirection = Command.DIRECTION.NONE;
                                 setAngle = false;
                             }
-                            angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * 100);
-                            if (Math.abs(angle - oldAngle) > 7 && setAngle) {
+                            angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
+                            if (Math.abs(angle - oldAngle) > 5 && setAngle) {
                                 SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
                                 //Log.v(TAG, String.format("Angle:%d", angle));
                                 oldAngle = angle;
@@ -108,8 +103,14 @@ public class ControlRobotActivity extends AppCompatActivity {
                                 SendDirectionMessage(yDirection);
                             }
 
-                            int speed = Math.abs(Math.round(((event.getY() - middleY) / v.getHeight()) * 200)); // 200 seems to work right for now, stands for speed
+                            float position = Math.abs(event.getY() - middleY);
+                            if (position > middleY) {
+                                position = middleY;
+                            }
+                            int speed = Math.round(Math.round(position / (v.getHeight() / 2) * maxSpeed));
+                            Log.v(TAG, String.valueOf(speed));
                             if (Math.abs(speed - oldSpeed) > 3) {
+
                                 oldSpeed = speed;
                                 SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
                             }
@@ -121,7 +122,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Log.e(TAG, "layout not found for setting touch thingey");
+            Log.e(TAG, "layout not found for setting touch thing");
         }
         maxSpeed = MAXIMUM_SPEED_ALLOWED;
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
@@ -132,13 +133,13 @@ public class ControlRobotActivity extends AppCompatActivity {
             @Override
             public void callBackMessageReceived(Command command, String arg) {
                 parseCommand(command, arg);
-                Log.v(TAG, String.format("Received command:%s with argument:%s\n", command.toString(), arg));
+                Log.v(TAG, String.format("Received command:%s with argument:%s", command.toString(), arg));
             }
         });
         ConnectionManager.getInstance().startMessageReceiver();
     }
 
-    public void parseCommand(Command command, String arg) {
+    private void parseCommand(Command command, String arg) {
         switch (command) {
             case MAXSPEED:
                 try {

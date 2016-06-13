@@ -242,7 +242,7 @@ public class ConnectionManager {
         }
     }
 
-    private enum State {wait, receiveCommand, receiveArg};
+    private enum State {wait, receiveCommand, receiveArg}
 
     public interface MessageCallBack {
         void callBackMessageReceived(Command command, String arg);

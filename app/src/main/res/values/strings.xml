@@ -4,10 +4,6 @@
     <string name="app_name">RP6 Control</string>
     <string name="connection_failed">No connection could be made, check if you are connected to the right network</string>
     <string name="ip_address">IP address</string>
-    <string name="forward">Forward</string>
-    <string name="backward">Backward</string>
-    <string name="left">Left</string>
-    <string name="right">Right</string>
     <string name="no_button_pressed">No button pressed</string>
     <string name="port_number">Port number</string>
     <string name="invalid_port_number">An invalid port number was entered</string>
@@ -24,4 +20,5 @@
     <string name="no_socket_set">No socket is set, retry entering it</string>
     <string name="maxspeed_invalid">Invalid maxspeed received</string>
     <string name="unknown_host">Unknown host entered</string>
+    <string name="message">Message</string>
 </resources>

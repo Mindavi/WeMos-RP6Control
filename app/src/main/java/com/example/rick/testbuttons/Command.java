@@ -1,6 +1,6 @@
 package com.example.rick.testbuttons;
 
-import java.util.Enumeration;
+import java.util.Locale;
 
 /**
  * Created by Rick on 6-6-2016.
@@ -18,7 +18,7 @@ public enum Command implements ICommand {
         RIGHT,
         FORWARD,
         BACKWARD,
-        NONE;
+        NONE
     }
 
     public static String CommandStringBuilder(DIRECTION direction) {
@@ -30,7 +30,7 @@ public enum Command implements ICommand {
     }
 
     public static String CommandStringBuilder(ICommand command, int arg) {
-        return String.format("%s:%d", command, arg);
+        return String.format(Locale.ENGLISH, "%s:%d", command, arg);
     }
 
 }
