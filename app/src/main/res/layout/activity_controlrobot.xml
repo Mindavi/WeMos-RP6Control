@@ -7,42 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/ControlRobotActivity"
     tools:context="com.example.rick.testbuttons.ControlRobotActivity">
-
-    <Button
-        style="@style/Button"
-        android:text="@string/forward"
-        android:id="@+id/btnUp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="up_click"
-        android:backgroundTint="@color/colorButtonGreen"
-        android:textColor="@color/colorBlack"/>
-
-    <Button
-        style="@style/Button"
-        android:text="@string/left"
-        android:id="@+id/btnLeft"
-        android:backgroundTint="@color/colorButtonGreen"
-        android:layout_below="@+id/btnUp"
-        android:layout_toStartOf="@+id/btnUp" />
-
-    <Button
-        style="@style/Button"
-        android:text="@string/right"
-        android:id="@+id/btnRight"
-        android:layout_below="@+id/btnUp"
-        android:layout_toEndOf="@+id/btnUp"
-        android:backgroundTint="@color/colorButtonGreen"/>
-
-    <Button
-        style="@style/Button"
-        android:text="@string/backward"
-        android:id="@+id/btnDown"
-        android:layout_below="@+id/btnRight"
-        android:layout_toStartOf="@+id/btnRight"
-        android:onClick="down_click"
-        android:backgroundTint="@color/colorButtonGreen"/>
 
     <TextView
         android:layout_width="150dp"
@@ -51,33 +17,17 @@
         android:text="@string/no_button_pressed"
         android:id="@+id/tvConnectionStatus"
         android:gravity="center_horizontal"
-        android:layout_marginTop="57dp"
-        android:layout_below="@+id/sbSpeed"
-        android:layout_centerHorizontal="true" />
-
-    <SeekBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sbSpeed"
-        android:max="130"
-        android:indeterminate="false"
-        android:progress="0"
-        android:layout_marginTop="17dp"
-        android:layout_below="@+id/btnDown"
-        android:layout_alignStart="@+id/btnLeft"
-        android:layout_alignEnd="@+id/btnRight"
-        android:minHeight="50dp" />
+        android:layout_below="@+id/tvMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/speed"
-        android:id="@+id/tvSpeedOnBar"
-        android:layout_alignTop="@+id/sbSpeed"
-        android:layout_alignBottom="@+id/sbSpeed"
-        android:layout_alignEnd="@+id/sbSpeed"
-        android:layout_alignStart="@+id/sbSpeed"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Message"
+        android:id="@+id/tvMessage"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

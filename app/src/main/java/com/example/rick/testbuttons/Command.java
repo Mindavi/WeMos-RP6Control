@@ -16,7 +16,8 @@ public enum Command implements ICommand {
         LEFT,
         RIGHT,
         FORWARD,
-        BACKWARD;
+        BACKWARD,
+        NONE;
     }
 
     public static String CommandStringBuilder(DIRECTION direction) {
