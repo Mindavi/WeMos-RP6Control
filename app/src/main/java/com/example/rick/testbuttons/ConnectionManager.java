@@ -28,6 +28,7 @@ public class ConnectionManager {
     private ConnectionCallback connectionCallback;
     private static ConnectionManager ourInstance = new ConnectionManager();
     private volatile boolean receiveMessages = false;
+    private final int CONNECTION_TIMEOUT_MS = 1000;
 
     public static ConnectionManager getInstance() {
         return ourInstance;
@@ -49,18 +50,19 @@ public class ConnectionManager {
     public void disconnect() {
         Log.v(TAG, "Disconnect");
         try {
-            if (sInput != null) {
+            /*if (sInput != null) {
                 sInput.close();
             }
             if (sOutput != null) {
                 sOutput.close();
-            }
+            }*/
             if (socket != null && !socket.isClosed() && socket.isConnected()) {
                 socket.close();
             }
         } catch (IOException e) {
             // don't worry be happy
         }
+        Log.v(TAG, "Disconnected");
     }
 
     public void setListener(MessageCallBack callBack) {
@@ -106,7 +108,7 @@ public class ConnectionManager {
                 InetAddress inetAddress = InetAddress.getByName(ipInput);
                 SocketAddress socketAddress = new InetSocketAddress(inetAddress, portInput);
                 tmpSocket = new Socket();
-                tmpSocket.connect(socketAddress, 300);
+                tmpSocket.connect(socketAddress, CONNECTION_TIMEOUT_MS);
                 tmpSOutput = new PrintWriter(tmpSocket.getOutputStream(), true);
                 tmpSInput = new BufferedReader(new InputStreamReader(tmpSocket.getInputStream()));
             } catch (UnknownHostException e) {
