@@ -14,6 +14,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     private final String TAG = "ControlRobotActivity";
     private TextView tvStatus;
     private TextView tvMessage;
+    private TextView tvSpeed;
     private int messageCounter;
     private int maxSpeed;
     private final int MAXIMUM_SPEED_ALLOWED = 130;
@@ -111,6 +112,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                             }
 
                             oldXDirection = xDirection;
+                            updateSpeedString();
                             return true;
                     }
                     return false;
@@ -120,8 +122,13 @@ public class ControlRobotActivity extends AppCompatActivity {
             Log.e(TAG, "layout not found for setting touch thing");
         }
         maxSpeed = MAXIMUM_SPEED_ALLOWED;
+
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
         tvMessage = (TextView) findViewById(R.id.tvMessage);
+        tvSpeed = (TextView) findViewById(R.id.tvSpeed);
+        Assert.assertNotNull(tvStatus);
+        Assert.assertNotNull(tvMessage);
+        Assert.assertNotNull(tvSpeed);
 
         messageCounter = 0;
         ConnectionManager.getInstance().setListener(new ConnectionManager.MessageCallBack() {
@@ -134,6 +141,9 @@ public class ControlRobotActivity extends AppCompatActivity {
         ConnectionManager.getInstance().startMessageReceiver();
     }
 
+    private void updateSpeedString() {
+        tvSpeed.setText(String.format(getResources().getString(R.string.speed_param), oldYDirection == Command.DIRECTION.FORWARD ? oldSpeed : -oldSpeed, maxSpeed));
+    }
     private void parseCommand(Command command, String arg) {
         switch (command) {
             case MAXSPEED:
@@ -143,6 +153,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                         // or say invalid value?
                         SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, maxSpeed));
                         maxSpeed = MAXIMUM_SPEED_ALLOWED;
+                        updateSpeedString();
                     }
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
