@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">RP6 Control</string>
-    <string name="connection_failed">No connection could be made</string>
+    <string name="connection_failed">No connection could be made, check if you are connected to the right network</string>
     <string name="ip_address">IP address</string>
     <string name="forward">Forward</string>
     <string name="backward">Backward</string>

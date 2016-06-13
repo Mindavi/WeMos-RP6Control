@@ -22,6 +22,9 @@ public class ControlRobotActivity extends AppCompatActivity {
     private int oldX = 0;
     private int oldY = 0;
     private int oldSpeed = 0;
+    private int oldAngle = 0;
+    private Command.DIRECTION oldYDirection;
+    private Command.DIRECTION oldXDirection;
 
     @Override
     public void onBackPressed() {
@@ -40,6 +43,9 @@ public class ControlRobotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlrobot);
 
+        oldXDirection = Command.DIRECTION.NONE;
+        oldYDirection = Command.DIRECTION.NONE;
+
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.ControlRobotActivity);
         if (relativeLayout != null) {
             relativeLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -47,52 +53,69 @@ public class ControlRobotActivity extends AppCompatActivity {
                 public boolean onTouch(View v, MotionEvent event) {
                     int deltaX = Math.round(Math.abs(oldX - event.getX()));
                     int deltaY = Math.round(Math.abs(oldY - event.getY()));
-                    if (deltaX > 50 || deltaY > 50) {
-                        Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none
-                        Command.DIRECTION xDirection = Command.DIRECTION.NONE;
-                        oldX = Math.round(event.getX());
-                        oldY = Math.round(event.getY());
-                        int middleY = v.getHeight() / 2;
-                        int middleX = v.getWidth() / 2;
-                        switch (event.getActionMasked()) {
-                            case MotionEvent.ACTION_UP:
-                                SendMessage(Command.CommandStringBuilder(Command.SPEED, "0"));
-                                return false;
-                            case MotionEvent.ACTION_DOWN:
-                                return true;
-                            case MotionEvent.ACTION_MOVE:
-                                if (event.getY() < middleY) {
-                                    yDirection = Command.DIRECTION.FORWARD;
-                                } else {
-                                    yDirection = Command.DIRECTION.BACKWARD;
-                                }
+                    switch (event.getActionMasked()) {
+                        case MotionEvent.ACTION_UP:
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, 0));
+                            return false;
+                    }
+                    Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none
+                    Command.DIRECTION xDirection = Command.DIRECTION.NONE;
+                    oldX = Math.round(event.getX());
+                    oldY = Math.round(event.getY());
+                    int middleY = v.getHeight() / 2;
+                    int middleX = v.getWidth() / 2;
+                    switch (event.getActionMasked()) {
+                        case MotionEvent.ACTION_DOWN:
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            if (event.getY() < middleY) {
+                                yDirection = Command.DIRECTION.FORWARD;
+                            } else {
+                                yDirection = Command.DIRECTION.BACKWARD;
+                            }
+                            if (yDirection != oldYDirection) {
+                                oldYDirection = yDirection;
                                 SendDirectionMessage(yDirection);
-
-                                if (event.getX() > middleX + (v.getWidth() / 10)) {
-                                    xDirection = Command.DIRECTION.RIGHT;
-                                } else if (event.getX() < middleX - (v.getWidth() / 10)) {
-                                    xDirection = Command.DIRECTION.LEFT;
-                                } else {
-                                    SendDirectionMessage(yDirection);
+                                if (oldXDirection != Command.DIRECTION.NONE) {
+                                    SendDirectionMessage(oldXDirection);
                                 }
+                            }
 
-                                // if direction is forward/backward don't send left or right
-                                if (xDirection != Command.DIRECTION.NONE) {
-                                    SendDirectionMessage(xDirection);
-                                }
+                            int angle = 0;
+                            boolean setAngle = false;
+                            if (event.getX() > middleX + (v.getWidth() / 10)) {
+                                xDirection = Command.DIRECTION.RIGHT;
+                                setAngle = true;
+                            } else if (event.getX() < middleX - (v.getWidth() / 10)) {
+                                xDirection = Command.DIRECTION.LEFT;
+                                setAngle = true;
+                            } else {
+                                angle = 0;
+                                xDirection = Command.DIRECTION.NONE;
+                                setAngle = false;
+                            }
+                            angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * 100);
+                            if (Math.abs(angle - oldAngle) > 7 && setAngle) {
+                                SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
+                                //Log.v(TAG, String.format("Angle:%d", angle));
+                                oldAngle = angle;
+                            }
 
-                                int speed = Math.abs(Math.round(((event.getY() - middleY) / v.getHeight()) * 200));
-                                if (Math.abs(speed - oldSpeed) > 3) {
-                                    oldSpeed = speed;
-                                    SendMessage(Command.CommandStringBuilder(Command.SPEED, String.valueOf(speed)));
-                                }
+                            // if direction is forward/backward don't send left or right
+                            if (xDirection != Command.DIRECTION.NONE && xDirection != oldXDirection) {
+                                SendDirectionMessage(xDirection);
+                            } else if (xDirection != oldXDirection && xDirection == Command.DIRECTION.NONE) { // send y direction when between left and right, thus going forward/backward
+                                SendDirectionMessage(yDirection);
+                            }
 
+                            int speed = Math.abs(Math.round(((event.getY() - middleY) / v.getHeight()) * 200)); // 200 seems to work right for now, stands for speed
+                            if (Math.abs(speed - oldSpeed) > 3) {
+                                oldSpeed = speed;
+                                SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
+                            }
 
-                                return true;
-                        }
-                    } else {
-                        //Log.v(TAG, "delta too low");
-                        return true;
+                            oldXDirection = xDirection;
+                            return true;
                     }
                     return false;
                 }

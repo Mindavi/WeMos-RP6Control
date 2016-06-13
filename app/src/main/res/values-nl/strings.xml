@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">RP6 Besturing</string>
     <string name="no_button_pressed">Geen knop ingedrukt</string>
-    <string name="connection_failed">Er kon geen verbinding worden gemaakt</string>
+    <string name="connection_failed">Er kon geen verbinding worden gemaakt, controleer of je met het goede netwerk verbonden bent</string>
     <string name="backward">Achteruit</string>
     <string name="left">Links</string>
     <string name="right">Rechts</string>

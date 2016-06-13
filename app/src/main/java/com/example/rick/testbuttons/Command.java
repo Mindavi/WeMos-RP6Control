@@ -7,6 +7,7 @@ import java.util.Enumeration;
  */
 public enum Command implements ICommand {
     MAXSPEED,
+    ANGLE,
     SPEED,
     MAX_LENGTH_ERROR,
     CONNECTION_ERROR,
@@ -26,6 +27,10 @@ public enum Command implements ICommand {
 
     public static String CommandStringBuilder(ICommand command, String arg) {
         return String.format("%s:%s", command, arg);
+    }
+
+    public static String CommandStringBuilder(ICommand command, int arg) {
+        return String.format("%s:%d", command, arg);
     }
 
 }
