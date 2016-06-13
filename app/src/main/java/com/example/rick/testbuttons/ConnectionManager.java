@@ -93,11 +93,11 @@ public class ConnectionManager {
         private MakeConnection() {
             ipInput = null;
             portInput = 0;
-            Log.v(TAG, "MakeConnection object created");
+            //Log.v(TAG, "MakeConnection object created");
         }
 
         protected ArrayList<Object> doInBackground(String... strings) {
-            Log.v(TAG, "Starting connection initiation");
+            //Log.v(TAG, "Starting connection initiation");
             Socket tmpSocket;
             PrintWriter tmpSOutput;
             BufferedReader tmpSInput;
@@ -165,7 +165,7 @@ public class ConnectionManager {
             }
 
             try {
-                Log.v(TAG, String.format("ReceiveMessages:%b", receiveMessages));
+                //Log.v(TAG, String.format("ReceiveMessages:%b", receiveMessages));
                 while (receiveMessages) {
                     if (socket == null || sInput == null || socket.isClosed() || !socket.isConnected()) {
                         Log.v(TAG, "Invalid something");

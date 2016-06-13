@@ -17,8 +17,6 @@ public class ControlRobotActivity extends AppCompatActivity {
     private int messageCounter;
     private int maxSpeed;
     private final int MAXIMUM_SPEED_ALLOWED = 130;
-    private int oldX = 0;
-    private int oldY = 0;
     private int oldSpeed = 0;
     private int oldAngle = 0;
     private Command.DIRECTION oldYDirection;
@@ -59,7 +57,6 @@ public class ControlRobotActivity extends AppCompatActivity {
                     Command.DIRECTION xDirection = Command.DIRECTION.NONE;
                     float middleY = v.getHeight() / 2;
                     float middleX = v.getWidth() / 2;
-                    Log.v(TAG, "middleY:" + String.valueOf(middleY));
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             return true;
@@ -108,9 +105,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                                 position = middleY;
                             }
                             int speed = Math.round(Math.round(position / (v.getHeight() / 2) * maxSpeed));
-                            Log.v(TAG, String.valueOf(speed));
                             if (Math.abs(speed - oldSpeed) > 3) {
-
                                 oldSpeed = speed;
                                 SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
                             }
@@ -146,12 +141,14 @@ public class ControlRobotActivity extends AppCompatActivity {
                     maxSpeed = Integer.valueOf(arg);
                     if (maxSpeed > MAXIMUM_SPEED_ALLOWED) {
                         // or say invalid value?
+                        SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, maxSpeed));
                         maxSpeed = MAXIMUM_SPEED_ALLOWED;
                     }
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
                     Log.v(TAG, "Invalid speed");
                     ShowInfo(getString(R.string.maxspeed_invalid));
+                    SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, arg));
                 }
                 break;
             case CONNECTION_ERROR:

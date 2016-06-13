@@ -15,12 +15,14 @@
         tools:ignore="AllowBackup">
 
         <!-- done so lint won't complain about data that can be synced with the cloud. we don't have any data whatsoever to sync right now -->
-        <activity android:name=".ControlRobotActivity">
+        <activity android:name=".ControlRobotActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ConnectActivity">
+        <activity android:name=".ConnectActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
