@@ -87,18 +87,26 @@ public class ControlRobotActivity extends AppCompatActivity {
                     // angle
                     int angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
 
+                    boolean returnValue;
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_UP:
-                            SendMessage(Command.CommandStringBuilder(Command.SPEED, 0));
-                            return false;
+                            speed = 0;
+                            oldSpeed = speed;
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
+                            updateSpeedString();
+                            returnValue = false;
+                            break;
                         case MotionEvent.ACTION_DOWN:
                             SendMessage(Command.CommandStringBuilder(yDirection));
                             if (xDirection != Command.DIRECTION.MIDDLE) {
                                 SendMessage(Command.CommandStringBuilder(xDirection));
                                 SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
                             }
+                            oldSpeed = speed;
                             SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
-                            return true;
+                            updateSpeedString();
+                            returnValue = true;
+                            break;
                         case MotionEvent.ACTION_MOVE:
                             if (yDirection != oldYDirection) {
                                 oldYDirection = yDirection;
@@ -128,10 +136,14 @@ public class ControlRobotActivity extends AppCompatActivity {
                             }
 
                             oldXDirection = xDirection;
-                            updateSpeedString();
-                            return true;
+                            returnValue = true;
+                            break;
+                        default:
+                            returnValue = false;
+                            break;
                     }
-                    return false;
+                    updateSpeedString();
+                    return returnValue;
                 }
             });
         } else {
@@ -156,7 +168,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     }
 
     private void updateSpeedString() {
-        tvSpeed.setText(String.format(getResources().getString(R.string.speed_param), oldYDirection == Command.DIRECTION.FORWARD ? oldSpeed : -oldSpeed, maxSpeed));
+        tvSpeed.setText(String.format(getResources().getString(R.string.speed_param), oldYDirection == Command.DIRECTION.FORWARD ? (oldSpeed < maxSpeed ? oldSpeed : maxSpeed) : -oldSpeed, maxSpeed));
     }
     private void parseCommand(Command command, String arg) {
         switch (command) {
