@@ -77,6 +77,16 @@ public class ControlRobotActivity extends AppCompatActivity {
                         setAngle = false;
                     }
 
+                    // speed
+                    float position = Math.abs(event.getY() - middleY);
+                    if (position > middleY) { // fix for being outside of the view
+                        position = middleY;
+                    }
+                    int speed = Math.round(Math.round(position / (v.getHeight() / 2) * maxSpeed));
+
+                    // angle
+                    int angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
+
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_UP:
                             SendMessage(Command.CommandStringBuilder(Command.SPEED, 0));
@@ -85,7 +95,9 @@ public class ControlRobotActivity extends AppCompatActivity {
                             SendMessage(Command.CommandStringBuilder(yDirection));
                             if (xDirection != Command.DIRECTION.MIDDLE) {
                                 SendMessage(Command.CommandStringBuilder(xDirection));
+                                SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
                             }
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
                             return true;
                         case MotionEvent.ACTION_MOVE:
                             if (yDirection != oldYDirection) {
@@ -96,7 +108,6 @@ public class ControlRobotActivity extends AppCompatActivity {
                                 }
                             }
 
-                            int angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
                             if (Math.abs(angle - oldAngle) > 5 && setAngle) {
                                 SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
                                 //Log.v(TAG, String.format("Angle:%d", angle));
@@ -110,11 +121,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                                 SendDirectionMessage(yDirection);
                             }
 
-                            float position = Math.abs(event.getY() - middleY);
-                            if (position > middleY) {
-                                position = middleY;
-                            }
-                            int speed = Math.round(Math.round(position / (v.getHeight() / 2) * maxSpeed));
+                            // decide if speed should be sent
                             if (Math.abs(speed - oldSpeed) > 3) {
                                 oldSpeed = speed;
                                 SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
