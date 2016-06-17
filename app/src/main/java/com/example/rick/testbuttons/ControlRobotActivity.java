@@ -49,45 +49,49 @@ public class ControlRobotActivity extends AppCompatActivity {
             relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none, if it stays there, something is wrong
+                    Command.DIRECTION xDirection = Command.DIRECTION.NONE;
+
+                    float middleY = v.getHeight() / 2;
+                    float middleX = v.getWidth() / 2;
+
+                    // yDirection
+                    if (event.getY() < middleY) {
+                        yDirection = Command.DIRECTION.FORWARD;
+                    } else {
+                        yDirection = Command.DIRECTION.BACKWARD;
+                    }
+
+                    // xDirection
+                    boolean setAngle = false;
+                    if (event.getX() > middleX + (v.getWidth() / 10)) {
+                        xDirection = Command.DIRECTION.RIGHT;
+                        setAngle = true;
+                    } else if (event.getX() < middleX - (v.getWidth() / 10)) {
+                        xDirection = Command.DIRECTION.LEFT;
+                        setAngle = true;
+                    } else {
+                        xDirection = Command.DIRECTION.MIDDLE;
+                        setAngle = false;
+                    }
+
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_UP:
                             SendMessage(Command.CommandStringBuilder(Command.SPEED, 0));
                             return false;
-                    }
-                    Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none
-                    Command.DIRECTION xDirection = Command.DIRECTION.NONE;
-                    float middleY = v.getHeight() / 2;
-                    float middleX = v.getWidth() / 2;
-                    switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
+                            SendMessage(Command.CommandStringBuilder(yDirection));
                             return true;
                         case MotionEvent.ACTION_MOVE:
-                            if (event.getY() < middleY) {
-                                yDirection = Command.DIRECTION.FORWARD;
-                            } else {
-                                yDirection = Command.DIRECTION.BACKWARD;
-                            }
                             if (yDirection != oldYDirection) {
                                 oldYDirection = yDirection;
                                 SendDirectionMessage(yDirection);
-                                if (oldXDirection != Command.DIRECTION.NONE) {
-                                    SendDirectionMessage(oldXDirection);
+                                if (xDirection != Command.DIRECTION.MIDDLE) {
+                                    SendDirectionMessage(xDirection);
                                 }
                             }
 
-                            int angle = 0;
-                            boolean setAngle = false;
-                            if (event.getX() > middleX + (v.getWidth() / 10)) {
-                                xDirection = Command.DIRECTION.RIGHT;
-                                setAngle = true;
-                            } else if (event.getX() < middleX - (v.getWidth() / 10)) {
-                                xDirection = Command.DIRECTION.LEFT;
-                                setAngle = true;
-                            } else {
-                                xDirection = Command.DIRECTION.NONE;
-                                setAngle = false;
-                            }
-                            angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
+                            int angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
                             if (Math.abs(angle - oldAngle) > 5 && setAngle) {
                                 SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
                                 //Log.v(TAG, String.format("Angle:%d", angle));
@@ -95,9 +99,9 @@ public class ControlRobotActivity extends AppCompatActivity {
                             }
 
                             // if direction is forward/backward don't send left or right
-                            if (xDirection != Command.DIRECTION.NONE && xDirection != oldXDirection) {
+                            if (xDirection != Command.DIRECTION.MIDDLE && xDirection != oldXDirection) {
                                 SendDirectionMessage(xDirection);
-                            } else if (xDirection != oldXDirection && xDirection == Command.DIRECTION.NONE) { // send y direction when between left and right, thus going forward/backward
+                            } else if (xDirection != oldXDirection && xDirection == Command.DIRECTION.MIDDLE) { // send y direction when between left and right, thus going forward/backward
                                 SendDirectionMessage(yDirection);
                             }
 

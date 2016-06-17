@@ -18,6 +18,7 @@ public enum Command implements ICommand {
         RIGHT,
         FORWARD,
         BACKWARD,
+        MIDDLE,
         NONE
     }
 
