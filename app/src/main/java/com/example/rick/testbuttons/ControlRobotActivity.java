@@ -49,11 +49,12 @@ public class ControlRobotActivity extends AppCompatActivity {
             relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Command.DIRECTION yDirection = Command.DIRECTION.NONE; // init on none, if it stays there, something is wrong
-                    Command.DIRECTION xDirection = Command.DIRECTION.NONE;
 
-                    float middleY = v.getHeight() / 2;
-                    float middleX = v.getWidth() / 2;
+                    final float middleY = v.getHeight() / 2;
+                    final float middleX = v.getWidth() / 2;
+
+                    Command.DIRECTION yDirection;
+                    Command.DIRECTION xDirection;
 
                     // yDirection
                     if (event.getY() < middleY) {
@@ -63,7 +64,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                     }
 
                     // xDirection
-                    boolean setAngle = false;
+                    boolean setAngle;
                     if (event.getX() > middleX + (v.getWidth() / 10)) {
                         xDirection = Command.DIRECTION.RIGHT;
                         setAngle = true;
