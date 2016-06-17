@@ -174,11 +174,16 @@ public class ControlRobotActivity extends AppCompatActivity {
         switch (command) {
             case MAXSPEED:
                 try {
-                    maxSpeed = Integer.valueOf(arg);
-                    if (maxSpeed > MAXIMUM_SPEED_ALLOWED) {
+                    int receivedSpeed = Integer.valueOf(arg);
+                    if (receivedSpeed > MAXIMUM_SPEED_ALLOWED) {
                         // or say invalid value?
                         SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, maxSpeed));
-                        maxSpeed = MAXIMUM_SPEED_ALLOWED;
+                        //maxSpeed = MAXIMUM_SPEED_ALLOWED; // chose to not change this value, because command was invalid
+                    } else {
+                        if (receivedSpeed < maxSpeed && receivedSpeed < oldSpeed) { // if speed should be set to a lower speed
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, receivedSpeed));
+                        }
+                        maxSpeed = receivedSpeed;
                     }
                     updateSpeedString();
                 } catch (NumberFormatException ex) {
