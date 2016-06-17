@@ -13,7 +13,6 @@ import junit.framework.Assert;
 public class ControlRobotActivity extends AppCompatActivity {
     private final String TAG = "ControlRobotActivity";
     private TextView tvStatus;
-    private TextView tvMessage;
     private TextView tvSpeed;
     private int messageCounter;
     private int maxSpeed;
@@ -33,7 +32,9 @@ public class ControlRobotActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ConnectionManager.getInstance().disconnect();
+        if (super.isFinishing()) { // if app will be killed off, not restarted
+            ConnectionManager.getInstance().disconnect();
+        }
     }
 
     @Override
@@ -132,10 +133,8 @@ public class ControlRobotActivity extends AppCompatActivity {
         maxSpeed = MAXIMUM_SPEED_ALLOWED;
 
         tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
-        tvMessage = (TextView) findViewById(R.id.tvMessage);
         tvSpeed = (TextView) findViewById(R.id.tvSpeed);
         Assert.assertNotNull(tvStatus);
-        Assert.assertNotNull(tvMessage);
         Assert.assertNotNull(tvSpeed);
 
         messageCounter = 0;
@@ -161,8 +160,8 @@ public class ControlRobotActivity extends AppCompatActivity {
                         // or say invalid value?
                         SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, maxSpeed));
                         maxSpeed = MAXIMUM_SPEED_ALLOWED;
-                        updateSpeedString();
                     }
+                    updateSpeedString();
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
                     Log.v(TAG, "Invalid speed");
@@ -176,17 +175,12 @@ public class ControlRobotActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    private void setTvMessage(String message) {
-        if (tvMessage != null) {
-            tvMessage.setText(message);
-        }
-    }
     private void SendMessage(String message) {
          if (ConnectionManager.getInstance().sendMessage(message)) {
              messageCounter++;
-             tvStatus.setText(getResources().getQuantityString(R.plurals.number_messages_sent, messageCounter, messageCounter));
-             setTvMessage(message);
+             if (messageCounter % 100 == 0) {
+                 Log.v(TAG, String.format("%d messages sent", messageCounter));
+             }
          }
     }
 

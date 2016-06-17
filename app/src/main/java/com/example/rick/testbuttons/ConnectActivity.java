@@ -80,6 +80,16 @@ public class ConnectActivity extends Activity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // reset default text
+        info = (TextView) findViewById(R.id.tvInfo);
+        Assert.assertNotNull(info);
+        info.setText(R.string.info);
+    }
 }
 
 

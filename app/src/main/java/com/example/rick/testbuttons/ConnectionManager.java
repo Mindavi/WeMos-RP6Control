@@ -47,6 +47,7 @@ public class ConnectionManager {
 
     public void disconnect() {
         Log.v(TAG, "Disconnect");
+        receiveMessages = false;
         try {
             /*if (sInput != null) {
                 sInput.close();
@@ -170,12 +171,14 @@ public class ConnectionManager {
                         Log.v(TAG, "Invalid something");
                         break;
                     }
+
                     int c = sInput.read(); // this call is blocking, so the thread does not have to sleep otherwise
                     if (c < 0) {
+                        Log.v(TAG, "connection seems to be closed");
                         break;
                     }
                     char ch = (char) c;
-                    if (sInput.ready() && c >= 0) {
+                    if (c >= 0) {
                         switch (state) {
                             case wait:
                                 if (ch == '%') {
@@ -210,7 +213,7 @@ public class ConnectionManager {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             return null;
         }

@@ -28,19 +28,9 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/no_button_pressed"
         android:id="@+id/tvConnectionStatus"
+        android:textColor="@android:color/holo_red_dark"
         android:gravity="center_horizontal"
-        android:layout_below="@+id/tvMessage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/message"
-        android:id="@+id/tvMessage"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
