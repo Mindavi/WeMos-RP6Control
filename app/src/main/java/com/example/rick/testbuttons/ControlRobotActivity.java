@@ -22,7 +22,7 @@ public class ControlRobotActivity extends AppCompatActivity {
     private int oldAngle = 0;
     private Command.DIRECTION oldYDirection;
     private Command.DIRECTION oldXDirection;
-    final int MAX_ANGLE = 100;
+    private final int MAX_ANGLE = 100;
 
     @Override
     public void onBackPressed() {
@@ -165,7 +165,7 @@ public class ControlRobotActivity extends AppCompatActivity {
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
                     Log.v(TAG, "Invalid speed");
-                    ShowInfo(getString(R.string.maxspeed_invalid));
+                    ShowInfo(getString(R.string.max_speed_invalid));
                     SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, arg));
                 }
                 break;
@@ -176,12 +176,9 @@ public class ControlRobotActivity extends AppCompatActivity {
         }
     }
 
-    private boolean setTvMessage(String message) {
+    private void setTvMessage(String message) {
         if (tvMessage != null) {
             tvMessage.setText(message);
-            return true;
-        } else {
-            return false;
         }
     }
     private void SendMessage(String message) {

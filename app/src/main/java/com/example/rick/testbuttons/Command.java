@@ -4,6 +4,7 @@ import java.util.Locale;
 
 /**
  * Created by Rick on 6-6-2016.
+ * This class is used to create a command to send to a server
  */
 public enum Command implements ICommand {
     MAXSPEED,

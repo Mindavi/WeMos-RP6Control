@@ -2,6 +2,7 @@ package com.example.rick.testbuttons;
 
 /**
  * Created by Rick on 3-6-2016.
+ * This class has some constants used for error checking and handling.
  */
 final class ConnectionConstants {
     public static final int Connected = 0;

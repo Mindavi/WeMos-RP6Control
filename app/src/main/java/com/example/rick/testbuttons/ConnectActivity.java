@@ -18,7 +18,6 @@ public class ConnectActivity extends Activity {
     private EditText etIpAddress;
     private EditText etPortNumber;
     private Context context;
-    private Button btnConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,7 @@ public class ConnectActivity extends Activity {
 
         etIpAddress = (EditText) findViewById(R.id.etIpAddress);
         etPortNumber = (EditText) findViewById(R.id.etPortNumber);
-        btnConnect = (Button) findViewById(R.id.btnConnect);
+        Button btnConnect = (Button) findViewById(R.id.btnConnect);
         info = (TextView) findViewById(R.id.tvInfo);
         Assert.assertNotNull(etIpAddress);
         Assert.assertNotNull(etPortNumber);
@@ -38,7 +37,7 @@ public class ConnectActivity extends Activity {
             @Override
             public void onClick(View v) {
                 ConnectionManager.getInstance().stopMessageReceiver();
-                String ipAddress = null;
+                String ipAddress;
                 int portNumber = 0;
                 ipAddress = etIpAddress.getText().toString();
                 try {

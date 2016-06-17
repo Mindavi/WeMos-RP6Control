@@ -6,7 +6,6 @@
     <string name="ip_address">IP adres</string>
     <string name="port_number">Poortnummer</string>
     <string name="invalid_port_number">Ongeldig poortnummer ingevoerd</string>
-    <string name="message_not_sent">Bericht niet verzonden</string>
     <string name="connect">Verbind</string>
     <plurals name="number_messages_sent">
         <item quantity="one">%d bericht verzonden</item>
@@ -16,8 +15,7 @@
     <string name="speed">Snelheid</string>
     <string name="info">Info</string>
     <string name="connection_lost">Verbinding verloren, probeer opnieuw te verbinden</string>
-    <string name="no_socket_set">Geen socket ingesteld, probeer deze opnieuw in te stellen</string>
-    <string name="maxspeed_invalid">Ongeldige maximum snelheid ontvangen</string>
+    <string name="max_speed_invalid">Ongeldige maximum snelheid ontvangen</string>
     <string name="unknown_host">Onbekende host ingevuld</string>
     <string name="message">Bericht</string>
 </resources>

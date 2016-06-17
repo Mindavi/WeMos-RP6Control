@@ -16,19 +16,17 @@ import java.util.ArrayList;
 
 /**
  * Created by Rick on 6-6-2016.
+ * This class manages the connection between this application and a server.
  */
 public class ConnectionManager {
     private final String TAG = "ConnectionManager";
-    private final int MAX_COMMAND_LENGTH = 50;
-    private final int MAX_ARG_LENGTH = 10;
     private Socket socket;
     private PrintWriter sOutput;
     private BufferedReader sInput;
     private MessageCallBack listener;
     private ConnectionCallback connectionCallback;
-    private static ConnectionManager ourInstance = new ConnectionManager();
+    private static final ConnectionManager ourInstance = new ConnectionManager();
     private volatile boolean receiveMessages = false;
-    private final int CONNECTION_TIMEOUT_MS = 1000;
 
     public static ConnectionManager getInstance() {
         return ourInstance;
@@ -108,6 +106,7 @@ public class ConnectionManager {
                 InetAddress inetAddress = InetAddress.getByName(ipInput);
                 SocketAddress socketAddress = new InetSocketAddress(inetAddress, portInput);
                 tmpSocket = new Socket();
+                final int CONNECTION_TIMEOUT_MS = 1000;
                 tmpSocket.connect(socketAddress, CONNECTION_TIMEOUT_MS);
                 tmpSOutput = new PrintWriter(tmpSocket.getOutputStream(), true);
                 tmpSInput = new BufferedReader(new InputStreamReader(tmpSocket.getInputStream()));
@@ -203,6 +202,8 @@ public class ConnectionManager {
                                     arg += ch;
                                 }
                         }
+                        final int MAX_ARG_LENGTH = 10;
+                        final int MAX_COMMAND_LENGTH = 50;
                         if (command.length() > MAX_COMMAND_LENGTH || arg.length() > MAX_ARG_LENGTH) {
                             publishProgress(Command.MAX_LENGTH_ERROR.toString(), "");
                         }

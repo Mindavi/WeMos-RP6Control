@@ -7,7 +7,6 @@
     <string name="no_button_pressed">No button pressed</string>
     <string name="port_number">Port number</string>
     <string name="invalid_port_number">An invalid port number was entered</string>
-    <string name="message_not_sent">Message was not sent</string>
     <plurals name="number_messages_sent">
         <item quantity="one">%d message sent</item>
         <item quantity="other">%d messages sent</item>
@@ -17,8 +16,7 @@
     <string name="connect">Connect</string>
     <string name="info">Info</string>
     <string name="connection_lost">Connection lost, try reconnecting</string>
-    <string name="no_socket_set">No socket is set, retry entering it</string>
-    <string name="maxspeed_invalid">Invalid max speed received</string>
+    <string name="max_speed_invalid">Invalid max speed received</string>
     <string name="unknown_host">Unknown host entered</string>
     <string name="message">Message</string>
 </resources>
