@@ -10,6 +10,20 @@
     android:id="@+id/ControlRobotActivity"
     tools:context="com.example.rick.testbuttons.ControlRobotActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreenLineTransparent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorGreenLineTransparent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <TextView
         android:layout_width="150dp"
         android:layout_height="150dp"
