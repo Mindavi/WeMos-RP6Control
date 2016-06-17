@@ -81,6 +81,9 @@ public class ControlRobotActivity extends AppCompatActivity {
                             return false;
                         case MotionEvent.ACTION_DOWN:
                             SendMessage(Command.CommandStringBuilder(yDirection));
+                            if (xDirection != Command.DIRECTION.MIDDLE) {
+                                SendMessage(Command.CommandStringBuilder(xDirection));
+                            }
                             return true;
                         case MotionEvent.ACTION_MOVE:
                             if (yDirection != oldYDirection) {
