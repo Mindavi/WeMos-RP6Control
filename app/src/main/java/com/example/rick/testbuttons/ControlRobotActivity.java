@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -14,14 +13,15 @@ import junit.framework.Assert;
 public class ControlRobotActivity extends AppCompatActivity {
     private final String TAG = "ControlRobotActivity";
     private TextView tvStatus;
+    private TextView tvSpeed;
     private int messageCounter;
-    private TextView tvSpeedOnBar;
-    private Button btnLeft;
-    private Button btnRight;
-    private SeekBar sbSpeed;
     private int maxSpeed;
     private final int MAXIMUM_SPEED_ALLOWED = 130;
-    private Command.DIRECTION verticalDirection;
+    private int oldSpeed = 0;
+    private int oldAngle = 0;
+    private Command.DIRECTION oldYDirection;
+    private Command.DIRECTION oldXDirection;
+    private final int MAX_ANGLE = 100;
 
     @Override
     public void onBackPressed() {
@@ -32,121 +32,165 @@ public class ControlRobotActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ConnectionManager.getInstance().disconnect();
+        if (super.isFinishing()) { // if app will be killed off, not restarted
+            ConnectionManager.getInstance().disconnect();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        verticalDirection = Command.DIRECTION.FORWARD; // initialise on forward?
         setContentView(R.layout.activity_controlrobot);
-        maxSpeed = MAXIMUM_SPEED_ALLOWED;
-        tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
-        sbSpeed = (SeekBar) findViewById(R.id.sbSpeed);
-        tvSpeedOnBar = (TextView) findViewById(R.id.tvSpeedOnBar);
 
-        btnLeft = (Button) findViewById(R.id.btnLeft);
-        btnRight = (Button) findViewById(R.id.btnRight);
+        oldXDirection = Command.DIRECTION.NONE;
+        oldYDirection = Command.DIRECTION.NONE;
 
-        btnLeft.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.LEFT));
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        SendMessage(Command.CommandStringBuilder(verticalDirection));
-                        return true;
-                    case MotionEvent.ACTION_CANCEL:
-                        SendMessage(Command.CommandStringBuilder(verticalDirection));
-                        return false;
-                }
-                return false;
-            }
-        });
-
-        btnRight.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        SendMessage(Command.CommandStringBuilder(Command.DIRECTION.RIGHT));
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        SendMessage(Command.CommandStringBuilder(verticalDirection));
-                        return true;
-                    case MotionEvent.ACTION_CANCEL:
-                        SendMessage(Command.CommandStringBuilder(verticalDirection));
-                        return false;
-                }
-                return false;
-            }
-        });
-
-        if (sbSpeed != null) {
-            sbSpeed.setMax(MAXIMUM_SPEED_ALLOWED);
-            sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.ControlRobotActivity);
+        if (relativeLayout != null) {
+            relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    Assert.assertNotNull(tvSpeedOnBar);
-                    Assert.assertNotNull(sbSpeed);
-                    if (progress > maxSpeed) {
-                        sbSpeed.setProgress(maxSpeed);
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    final float middleY = v.getHeight() / 2;
+                    final float middleX = v.getWidth() / 2;
+
+                    Command.DIRECTION yDirection;
+                    Command.DIRECTION xDirection;
+
+                    // yDirection
+                    if (event.getY() < middleY) {
+                        yDirection = Command.DIRECTION.FORWARD;
+                    } else {
+                        yDirection = Command.DIRECTION.BACKWARD;
                     }
-                    if (tvSpeedOnBar != null) {
-                        updateSpeedString();
+
+                    // xDirection
+                    boolean setAngle;
+                    if (event.getX() > middleX + (v.getWidth() / 10)) {
+                        xDirection = Command.DIRECTION.RIGHT;
+                        setAngle = true;
+                    } else if (event.getX() < middleX - (v.getWidth() / 10)) {
+                        xDirection = Command.DIRECTION.LEFT;
+                        setAngle = true;
+                    } else {
+                        xDirection = Command.DIRECTION.MIDDLE;
+                        setAngle = false;
                     }
-                }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
+                    // speed
+                    float position = Math.abs(event.getY() - middleY);
+                    if (position > middleY) { // fix for being outside of the view
+                        position = middleY;
+                    }
+                    int speed = Math.round(Math.round(position / (v.getHeight() / 2) * maxSpeed));
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    int speed = seekBar.getProgress();
-                    SendMessage(String.format("%s:%s", Command.SPEED.toString(), Integer.toString(speed)));
+                    // angle
+                    int angle = Math.round(Math.abs(event.getX() - middleX) / (v.getWidth() / 2) * MAX_ANGLE);
+
+                    boolean returnValue;
+                    switch (event.getActionMasked()) {
+                        case MotionEvent.ACTION_UP:
+                            speed = 0;
+                            oldSpeed = speed;
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
+                            updateSpeedString();
+                            returnValue = false;
+                            break;
+                        case MotionEvent.ACTION_DOWN:
+                            SendMessage(Command.CommandStringBuilder(yDirection));
+                            if (xDirection != Command.DIRECTION.MIDDLE) {
+                                SendMessage(Command.CommandStringBuilder(xDirection));
+                                SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
+                            }
+                            oldSpeed = speed;
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
+                            updateSpeedString();
+                            returnValue = true;
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            if (yDirection != oldYDirection) {
+                                oldYDirection = yDirection;
+                                SendDirectionMessage(yDirection);
+                                if (xDirection != Command.DIRECTION.MIDDLE) {
+                                    SendDirectionMessage(xDirection);
+                                }
+                            }
+
+                            if (Math.abs(angle - oldAngle) > 5 && setAngle) {
+                                SendMessage(Command.CommandStringBuilder(Command.ANGLE, angle));
+                                //Log.v(TAG, String.format("Angle:%d", angle));
+                                oldAngle = angle;
+                            }
+
+                            // if direction is forward/backward don't send left or right
+                            if (xDirection != Command.DIRECTION.MIDDLE && xDirection != oldXDirection) {
+                                SendDirectionMessage(xDirection);
+                            } else if (xDirection != oldXDirection && xDirection == Command.DIRECTION.MIDDLE) { // send y direction when between left and right, thus going forward/backward
+                                SendDirectionMessage(yDirection);
+                            }
+
+                            // decide if speed should be sent
+                            if (Math.abs(speed - oldSpeed) > 3) {
+                                oldSpeed = speed;
+                                SendMessage(Command.CommandStringBuilder(Command.SPEED, speed));
+                            }
+
+                            oldXDirection = xDirection;
+                            returnValue = true;
+                            break;
+                        default:
+                            returnValue = false;
+                            break;
+                    }
+                    updateSpeedString();
+                    return returnValue;
                 }
             });
+        } else {
+            Log.e(TAG, "layout not found for setting touch thing");
         }
+        maxSpeed = MAXIMUM_SPEED_ALLOWED;
+
+        tvStatus = (TextView) findViewById(R.id.tvConnectionStatus);
+        tvSpeed = (TextView) findViewById(R.id.tvSpeed);
+        Assert.assertNotNull(tvStatus);
+        Assert.assertNotNull(tvSpeed);
+
         messageCounter = 0;
         ConnectionManager.getInstance().setListener(new ConnectionManager.MessageCallBack() {
             @Override
             public void callBackMessageReceived(Command command, String arg) {
                 parseCommand(command, arg);
-                Log.v(TAG, String.format("Received command:%s with argument:%s\n", command.toString(), arg));
+                Log.v(TAG, String.format("Received command:%s with argument:%s", command.toString(), arg));
             }
         });
         ConnectionManager.getInstance().startMessageReceiver();
-        updateSpeedString();
     }
 
     private void updateSpeedString() {
-        Assert.assertNotNull(sbSpeed);
-        Assert.assertNotNull(tvSpeedOnBar);
-        int speed = sbSpeed.getProgress();
-        String sSpeed = String.format(getResources().getString(R.string.speed_param), speed, maxSpeed);
-        tvSpeedOnBar.setText(sSpeed);
+        tvSpeed.setText(String.format(getResources().getString(R.string.speed_param), oldYDirection == Command.DIRECTION.FORWARD ? (oldSpeed < maxSpeed ? oldSpeed : maxSpeed) : -oldSpeed, maxSpeed));
     }
-
-    public void parseCommand(Command command, String arg) {
+    private void parseCommand(Command command, String arg) {
         switch (command) {
             case MAXSPEED:
                 try {
-                    maxSpeed = Integer.valueOf(arg);
-                    if (maxSpeed > MAXIMUM_SPEED_ALLOWED) {
+                    int receivedSpeed = Integer.valueOf(arg);
+                    if (receivedSpeed > MAXIMUM_SPEED_ALLOWED) {
                         // or say invalid value?
-                        maxSpeed = MAXIMUM_SPEED_ALLOWED;
-                    }
-                    int setSpeed = sbSpeed.getProgress();
-                    if (setSpeed > maxSpeed) {
-                        sbSpeed.setProgress(maxSpeed);
+                        SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, maxSpeed));
+                        //maxSpeed = MAXIMUM_SPEED_ALLOWED; // chose to not change this value, because command was invalid
+                    } else {
+                        if (receivedSpeed < maxSpeed && receivedSpeed < oldSpeed) { // if speed should be set to a lower speed
+                            SendMessage(Command.CommandStringBuilder(Command.SPEED, receivedSpeed));
+                        }
+                        maxSpeed = receivedSpeed;
                     }
                     updateSpeedString();
                 } catch (NumberFormatException ex) {
                     //ex.printStackTrace();
                     Log.v(TAG, "Invalid speed");
-                    ShowInfo(getString(R.string.maxspeed_invalid));
+                    ShowInfo(getString(R.string.max_speed_invalid));
+                    SendMessage(Command.CommandStringBuilder(Command.INVALID_COMMAND_ERROR, arg));
                 }
                 break;
             case CONNECTION_ERROR:
@@ -155,23 +199,17 @@ public class ControlRobotActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    public void down_click(View view) {
-        verticalDirection = Command.DIRECTION.BACKWARD;
-        SendMessage(Command.CommandStringBuilder(verticalDirection));
-    }
-
-    public void up_click(View view) {
-        verticalDirection = Command.DIRECTION.FORWARD;
-        SendMessage(Command.CommandStringBuilder(verticalDirection));
-
-    }
-
     private void SendMessage(String message) {
          if (ConnectionManager.getInstance().sendMessage(message)) {
              messageCounter++;
-             tvStatus.setText(getResources().getQuantityString(R.plurals.number_messages_sent, messageCounter, messageCounter));
+             if (messageCounter % 100 == 0) {
+                 Log.v(TAG, String.format("%d messages sent", messageCounter));
+             }
          }
+    }
+
+    private void SendDirectionMessage(Command.DIRECTION command) {
+        SendMessage(Command.CommandStringBuilder(command));
     }
 
     private void ShowInfo(String info) {

@@ -16,19 +16,17 @@ import java.util.ArrayList;
 
 /**
  * Created by Rick on 6-6-2016.
+ * This class manages the connection between this application and a server.
  */
 public class ConnectionManager {
     private final String TAG = "ConnectionManager";
-    private final int MAX_COMMAND_LENGTH = 50;
-    private final int MAX_ARG_LENGTH = 10;
     private Socket socket;
     private PrintWriter sOutput;
     private BufferedReader sInput;
     private MessageCallBack listener;
     private ConnectionCallback connectionCallback;
-    private static ConnectionManager ourInstance = new ConnectionManager();
+    private static final ConnectionManager ourInstance = new ConnectionManager();
     private volatile boolean receiveMessages = false;
-    private final int CONNECTION_TIMEOUT_MS = 1000;
 
     public static ConnectionManager getInstance() {
         return ourInstance;
@@ -49,6 +47,7 @@ public class ConnectionManager {
 
     public void disconnect() {
         Log.v(TAG, "Disconnect");
+        receiveMessages = false;
         try {
             /*if (sInput != null) {
                 sInput.close();
@@ -93,11 +92,11 @@ public class ConnectionManager {
         private MakeConnection() {
             ipInput = null;
             portInput = 0;
-            Log.v(TAG, "MakeConnection object created");
+            //Log.v(TAG, "MakeConnection object created");
         }
 
         protected ArrayList<Object> doInBackground(String... strings) {
-            Log.v(TAG, "Starting connection initiation");
+            //Log.v(TAG, "Starting connection initiation");
             Socket tmpSocket;
             PrintWriter tmpSOutput;
             BufferedReader tmpSInput;
@@ -108,6 +107,7 @@ public class ConnectionManager {
                 InetAddress inetAddress = InetAddress.getByName(ipInput);
                 SocketAddress socketAddress = new InetSocketAddress(inetAddress, portInput);
                 tmpSocket = new Socket();
+                final int CONNECTION_TIMEOUT_MS = 1000;
                 tmpSocket.connect(socketAddress, CONNECTION_TIMEOUT_MS);
                 tmpSOutput = new PrintWriter(tmpSocket.getOutputStream(), true);
                 tmpSInput = new BufferedReader(new InputStreamReader(tmpSocket.getInputStream()));
@@ -165,18 +165,20 @@ public class ConnectionManager {
             }
 
             try {
-                Log.v(TAG, String.format("ReceiveMessages:%b", receiveMessages));
+                //Log.v(TAG, String.format("ReceiveMessages:%b", receiveMessages));
                 while (receiveMessages) {
                     if (socket == null || sInput == null || socket.isClosed() || !socket.isConnected()) {
                         Log.v(TAG, "Invalid something");
                         break;
                     }
+
                     int c = sInput.read(); // this call is blocking, so the thread does not have to sleep otherwise
                     if (c < 0) {
+                        Log.v(TAG, "connection seems to be closed");
                         break;
                     }
                     char ch = (char) c;
-                    if (sInput.ready() && c >= 0) {
+                    if (c >= 0) {
                         switch (state) {
                             case wait:
                                 if (ch == '%') {
@@ -203,13 +205,15 @@ public class ConnectionManager {
                                     arg += ch;
                                 }
                         }
+                        final int MAX_ARG_LENGTH = 10;
+                        final int MAX_COMMAND_LENGTH = 50;
                         if (command.length() > MAX_COMMAND_LENGTH || arg.length() > MAX_ARG_LENGTH) {
                             publishProgress(Command.MAX_LENGTH_ERROR.toString(), "");
                         }
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             return null;
         }
@@ -242,7 +246,7 @@ public class ConnectionManager {
         }
     }
 
-    private enum State {wait, receiveCommand, receiveArg};
+    private enum State {wait, receiveCommand, receiveArg}
 
     public interface MessageCallBack {
         void callBackMessageReceived(Command command, String arg);

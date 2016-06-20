@@ -18,40 +18,41 @@ public class ConnectActivity extends Activity {
     private EditText etIpAddress;
     private EditText etPortNumber;
     private Context context;
-    private Button btnConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        btnConnect = (Button) findViewById(R.id.btnConnect);
+        etIpAddress = (EditText) findViewById(R.id.etIpAddress);
+        etPortNumber = (EditText) findViewById(R.id.etPortNumber);
+        Button btnConnect = (Button) findViewById(R.id.btnConnect);
+        info = (TextView) findViewById(R.id.tvInfo);
+        Assert.assertNotNull(etIpAddress);
+        Assert.assertNotNull(etPortNumber);
+        Assert.assertNotNull(btnConnect);
+        Assert.assertNotNull(info);
+
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v(TAG, "Click!");
                 ConnectionManager.getInstance().stopMessageReceiver();
-                String ipAddress = null;
+                String ipAddress;
                 int portNumber = 0;
-                if (etIpAddress != null && etPortNumber != null) {
-                    ipAddress = etIpAddress.getText().toString();
-                    try {
-                        portNumber = Integer.parseInt(etPortNumber.getText().toString());
-                    } catch (NumberFormatException ex) {
-                        // don't care
-                    }
+                ipAddress = etIpAddress.getText().toString();
+                try {
+                    portNumber = Integer.parseInt(etPortNumber.getText().toString());
+                } catch (NumberFormatException ex) {
+                    info.setText(R.string.invalid_port_number);
                 }
 
-                if (ipAddress == null || ipAddress.trim().length() < 1 || portNumber < 1) {
-                    Log.v(TAG, "Ip: " + (ipAddress == null ? "null" : ipAddress) + " Port: " + portNumber);
+                if (ipAddress.trim().length() < 1 || portNumber < 1) {
+                    Log.v(TAG, "Ip: " + ipAddress + " Port: " + portNumber);
                     return;
                 }
                 ConnectionManager.getInstance().connect(ipAddress, portNumber);
             }
         });
-        info = (TextView) findViewById(R.id.tvInfo);
-        etIpAddress = (EditText) findViewById(R.id.etIpAddress);
-        etPortNumber = (EditText) findViewById(R.id.etPortNumber);
         context = this;
 
         ConnectionManager.getInstance().setConnectionCallback(new ConnectionManager.ConnectionCallback() {
@@ -78,6 +79,16 @@ public class ConnectActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // reset default text
+        info = (TextView) findViewById(R.id.tvInfo);
+        Assert.assertNotNull(info);
+        info.setText(R.string.info);
     }
 }
 
