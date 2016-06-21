@@ -56,4 +56,14 @@
         android:layout_alignTop="@+id/etIpAddress"
         android:layout_centerHorizontal="true" />
 
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etServerIp"
+        android:inputType="number|textUri"
+        android:hint="@string/server_ip"
+        android:textAlignment="center"
+        android:layout_above="@+id/etIpAddress"
+        android:layout_alignStart="@+id/etIpAddress" />
+
 </RelativeLayout>

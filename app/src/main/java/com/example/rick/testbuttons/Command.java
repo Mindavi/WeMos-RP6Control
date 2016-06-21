@@ -13,7 +13,8 @@ public enum Command implements ICommand {
     MAX_LENGTH_ERROR,
     CONNECTION_ERROR,
     INVALID_COMMAND_ERROR,
-    CONTROL;
+    CONTROL,
+    SERVERIP;
     public enum DIRECTION {
         LEFT,
         RIGHT,

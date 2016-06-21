@@ -17,6 +17,7 @@ public class ConnectActivity extends Activity {
     private TextView info;
     private EditText etIpAddress;
     private EditText etPortNumber;
+    private EditText etServerIp;
     private Context context;
 
     @Override
@@ -26,11 +27,13 @@ public class ConnectActivity extends Activity {
 
         etIpAddress = (EditText) findViewById(R.id.etIpAddress);
         etPortNumber = (EditText) findViewById(R.id.etPortNumber);
+        etServerIp = (EditText) findViewById(R.id.etServerIp);
         Button btnConnect = (Button) findViewById(R.id.btnConnect);
         info = (TextView) findViewById(R.id.tvInfo);
         Assert.assertNotNull(etIpAddress);
         Assert.assertNotNull(etPortNumber);
         Assert.assertNotNull(btnConnect);
+        Assert.assertNotNull(etServerIp);
         Assert.assertNotNull(info);
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +64,12 @@ public class ConnectActivity extends Activity {
                 Assert.assertNotNull(info);
                 switch (state) {
                     case ConnectionConstants.Connected:
+                        // send which ip address hosts the server
+                        String serverIp = etServerIp.getText().toString();
+                        String serverIpCommand = Command.CommandStringBuilder(Command.SERVERIP, serverIp);
+                        ConnectionManager.getInstance().sendMessage(serverIpCommand);
+
+                        // make and start intent for controlling the bot
                         Intent controlIntent = new Intent(context, ControlRobotActivity.class);
                         startActivity(controlIntent);
                         break;
