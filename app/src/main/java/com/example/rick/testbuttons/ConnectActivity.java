@@ -64,6 +64,9 @@ public class ConnectActivity extends Activity {
                 Assert.assertNotNull(info);
                 switch (state) {
                     case ConnectionConstants.Connected:
+                        // if connected, send identification message
+                        String identificationMessage = Command.CommandStringBuilder(Command.CONTROL, "BeefburgerApp");
+                        ConnectionManager.getInstance().sendMessage(identificationMessage);
                         // send which ip address hosts the server
                         String serverIp = etServerIp.getText().toString();
                         String serverIpCommand = Command.CommandStringBuilder(Command.SERVERIP, serverIp);

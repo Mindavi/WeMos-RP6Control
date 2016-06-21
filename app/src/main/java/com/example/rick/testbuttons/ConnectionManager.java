@@ -142,8 +142,7 @@ public class ConnectionManager {
             }
             Log.v(TAG, "got " + (state == ConnectionConstants.Connected ? "connection" : "no connection"));
             if (state == ConnectionConstants.Connected) {
-                // if connected, send identification message
-                sendMessage(Command.CommandStringBuilder(Command.CONTROL, "BeefburgerApp"));
+                // connected
             }
             if (connectionCallback != null) {
                 Log.v(TAG, connectionCallback.getClass().getSimpleName());
